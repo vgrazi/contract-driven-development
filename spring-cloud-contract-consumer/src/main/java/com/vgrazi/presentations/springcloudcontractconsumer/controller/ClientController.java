@@ -58,7 +58,8 @@ public class ClientController {
         if(shares < 0) {
             portfolioRepository.placeSellOrder(client, stock, -shares);
         }
-        else {
+        // disregard 0 share purchases, just display the holdings
+        else if(shares > 0){
             boolean ok = portfolioRepository.getAvailableFunds(client) >= pricingRepository.getPrice(stock) * shares;
 
             if (ok) {
