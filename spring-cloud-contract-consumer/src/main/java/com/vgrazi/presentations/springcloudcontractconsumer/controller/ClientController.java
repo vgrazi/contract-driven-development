@@ -52,17 +52,24 @@ public class ClientController {
         Stock stock = request.getStock();
         int shares = request.getShares();
         Client client  = portfolioRepository.getClient(clientId);
-
-        boolean ok = shares < 0 || portfolioRepository.getAvailableFunds(client) >= pricingRepository.getPrice(stock) * shares;
-
-        if (ok) {
-            portfolioRepository.placeBuySellOrder(clientId, stock, shares);
-        } else {
-            // todo: add call to provider to increase credit line
-            // need to request an increase in creditLine
+        if(client == null) {
+            throw new IllegalArgumentException("Unknown client id " +clientId);
         }
+        if(shares < 0) {
+            portfolioRepository.placeSellOrder(client, stock, -shares);
+        }
+        else {
+            boolean ok = portfolioRepository.getAvailableFunds(client) >= pricingRepository.getPrice(stock) * shares;
 
-        return new ClientBuySellResponse(clientId, stock, shares);
+            if (ok) {
+                portfolioRepository.placeBuyOrder(client, stock, shares);
+            } else {
+                // todo: add call to provider to increase credit line
+                // need to request an increase in creditLine
+                throw new IllegalArgumentException("Insufficient credit - apply for increase");
+            }
+        }
+        return new ClientBuySellResponse(client, stock, shares);
     }
 
     @GetMapping("/create-client")

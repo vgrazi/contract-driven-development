@@ -41,44 +41,43 @@ final PricingRepository pricingRepository;
     }
 
     /**
-     * If this is a sell order, verifies the client has enough shares, and sells them, starting with the oldest holdings (FIFO)
-     * if this is a buy order, verifies the client has sufficient funds + credit. If not, throws an exception
+     * Verifies the client has sufficient funds + credit. If not, throws an exception
      * buy= shares>0; sell=shares<0. These are long only. We can't sell something we don't already own
      */
-    public void placeBuySellOrder(int clientId, Stock stock, int shares) {
-        Client client = getClient(clientId);
-        if(client == null) {
-            throw new IllegalArgumentException("Client " + clientId + " does not exist");
-        }
-        if(shares < 0) {
-            // this is a sell order
-            shares = -shares;
-            // first, confirm the total position > shares
-            double totalShares = getTotalShares(clientId, stock);
-            if (totalShares < shares) {
-                throw new IllegalArgumentException("Trying to sell " + shares + " shares of " + stock + ". Only " + totalShares + " are available");
-            }
-            List<Position> positions = getPositions(stock, clientId);
-            for (int i = 0; i < positions.size() && shares > 0; i++) {
-                Position position = positions.get(i);
-                if (position.getShares() <= shares) {
-                    removeFirstPosition(position, clientId);
-                    shares = position.getShares() - shares;
-                }
-            }
+    public void placeBuyOrder(Client client, Stock stock, int shares) {
+        // check if has available credit
+        double price = pricingRepository.getPrice(stock);
+        double availableFunds = getAvailableFunds(client);
+        double purchase = shares * price;
+        if(availableFunds >= purchase) {
+            // if sufficient funds, place order
+            client.getPositions().add(new Position(stock, shares, price));
         }
         else {
-            // this is a buy order
-            // check if has available credit
-            double price = pricingRepository.getPrice(stock);
-            double availableFunds = getAvailableFunds(client);
-            double purchase = shares * price;
-            if(availableFunds >= purchase) {
-                // if sufficient funds, place order
-                client.getPositions().add(new Position(stock, shares, price));
+            throw new IllegalArgumentException("client " + client + " has insufficient funds " + availableFunds + ". Does not cover purchase " + purchase);
+        }
+    }
+
+    /**
+     * Verifies the client has enough shares, and sells them, starting with the oldest holdings (FIFO)
+     * If not enough shares, throwa an exception
+     */
+    public void placeSellOrder(Client client, Stock stock, int shares) {
+        // first, confirm the total position > shares
+        double totalShares = getTotalShares(client, stock);
+        if (totalShares < shares) {
+            throw new IllegalArgumentException("Trying to sell " + shares + " shares of " + stock + ". Only " + totalShares + " are available");
+        }
+        List<Position> positions = getPositions(stock, client);
+        for (int i = 0; i < positions.size() && shares > 0; i++) {
+            Position position = positions.get(i);
+            if (position.getShares() <= shares) {
+                shares = position.getShares() - shares;
+                removeFirstPosition(position, client);
             }
             else {
-                throw new IllegalArgumentException("client id " + clientId + " has available funds " + availableFunds + ". Does not cover purchase " + purchase);
+                position.setShares(position.getShares() - shares);
+                break;
             }
         }
     }
@@ -86,22 +85,13 @@ final PricingRepository pricingRepository;
     /**
      * Removes the oldest holding matching this stock from the client's portfolio
      */
-    private void removeFirstPosition(Position position, int clientId) {
-        Client client = getClient(clientId);
-        if(client == null) {
-            throw new IllegalArgumentException("Client " + clientId + " does not exist");
-        }
+    private void removeFirstPosition(Position position, Client client) {
         List<Position> positions = client.getPositions();
         positions.remove(position);
-
     }
 
-    public double getTotalValue(int clientId, Stock stock) {
-        Client client = getClient(clientId);
-        if(client == null) {
-            throw new IllegalArgumentException("Client " + clientId + " does not exist");
-        }
-        List<Position> positions = getPositions(stock, clientId);
+    public double getTotalValue(Client client, Stock stock) {
+        List<Position> positions = getPositions(stock, client);
         return positions.stream().mapToDouble(this::getCurrentValue).sum();
     }
 
@@ -109,12 +99,8 @@ final PricingRepository pricingRepository;
         return position.getShares() * pricingRepository.getPrice(position.getStock());
     }
 
-    public double getTotalShares(int clientId, Stock stock) {
-        Client client = getClient(clientId);
-        if(client == null) {
-            throw new IllegalArgumentException("Client " + clientId + " does not exist");
-        }
-        List<Position> positions = getPositions(stock, clientId);
+    private double getTotalShares(Client client, Stock stock) {
+        List<Position> positions = getPositions(stock, client);
         return positions.stream().mapToInt(Position::getShares).sum();
     }
 
@@ -127,11 +113,7 @@ final PricingRepository pricingRepository;
         positions.add(position);
     }
 
-    private List<Position> getPositions(Stock stock, int clientId) {
-        Client client = getClient(clientId);
-        if(client == null) {
-            throw new IllegalArgumentException("Client " + clientId + " does not exist");
-        }
+    private List<Position> getPositions(Stock stock, Client client) {
         List<Position> positions = client.getPositions();
         Position proxyPosition = new Position(stock, 0, 0);
         return positions.stream().filter(position -> position.equals(proxyPosition)).collect(Collectors.toList());

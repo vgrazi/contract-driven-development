@@ -20,5 +20,5 @@ public class Client {
     @Getter private String taxId;
     @Getter private double creditLimit;
     @Getter private double cashOnDeposit;
-    @ToString.Exclude @Getter private List<Position> positions = new CopyOnWriteArrayList<>();
+    @Getter private final List<Position> positions = new CopyOnWriteArrayList<>();
 }

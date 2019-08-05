@@ -1,5 +1,6 @@
 package com.vgrazi.presentations.springcloudcontractconsumer.gateway;
 
+import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public class ClientBuySellResponse {
-    @Getter private int clientId;
+    @Getter private Client client;
     @Getter private Stock stock;
     @Getter private int shares;
 }

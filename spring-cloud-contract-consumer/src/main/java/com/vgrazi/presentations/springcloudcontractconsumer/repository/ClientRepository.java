@@ -1,11 +1,9 @@
 package com.vgrazi.presentations.springcloudcontractconsumer.repository;
 
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
-import com.vgrazi.presentations.springcloudcontractconsumer.domain.Position;
 import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +15,7 @@ public class ClientRepository {
 
     public Client createClient(String name, String taxId) {
         int clientId = atomicInteger.incrementAndGet();
-        Client client = new Client(clientId, name, taxId, 50_000, 50_000, new ArrayList<Position>());
+        Client client = new Client(clientId, name, taxId, 100_000, 100_000);
         clients.put(clientId, client);
         return client;
     }
