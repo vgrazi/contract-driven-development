@@ -17,8 +17,4 @@ public class Position {
     @Getter private Stock stock;
     @EqualsAndHashCode.Exclude @Getter @Setter private int shares;
     @EqualsAndHashCode.Exclude @Getter private double purchasePrice;
-
-    public double getCurrentValue() {
-        return stock.getPrice() * shares;
-    }
 }

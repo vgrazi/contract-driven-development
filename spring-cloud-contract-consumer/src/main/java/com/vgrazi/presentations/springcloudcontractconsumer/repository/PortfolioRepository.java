@@ -5,55 +5,37 @@ import com.vgrazi.presentations.springcloudcontractconsumer.domain.Position;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class PortfolioRepository {
-//    private List<Position> holdings = Arrays.asList(
-//            new Position(new Stock("AAPL", "NAS", 0), 1200), // "NASDAQ",
-//            new Position(new Stock("GOOG", "NAS", 0), 1400), // "NASDAQ",
-//            new Position(new Stock("MSFT", "NAS", 0), 1000), // "NASDAQ",
-//            new Position(new Stock("FB", "NAS", 0), 1000), // "NASDAQ",
-//            new Position(new Stock("XOM", "NYSE", 0), 1100), // "NYSE",
-//            new Position(new Stock("PFE", "NYSE", 0), 1210), // "NYSE",
-//            new Position(new Stock("WMT", "NYSE", 0), 1450), // "NYSE",
-//            new Position(new Stock("BARC", "LSE", 0), 1080), // "LSE",
-//            new Position(new Stock("BP", "LSE", 0), 1080) // "LSE",
-//    );
 
-
-    public PortfolioRepository() {
+final ClientRepository clientRepository;
+final PricingRepository pricingRepository;
+    public PortfolioRepository(ClientRepository clientRepository, PricingRepository pricingRepository) {
+        this.clientRepository = clientRepository;
+        this.pricingRepository = pricingRepository;
     }
 
-    private final Map<Integer, Client> clients = new HashMap<>();
-
-    public List<Position> getHoldings(int clientId) {
-        Client client = getClient(clientId);
-        if (client != null) {
-            List<Position> positions = client.getPositions();
-            return positions;
-        }
-        throw new IllegalArgumentException(clientId + " is not a known client");
+    public List<Position> getHoldings(Client client) {
+        List<Position> positions = client.getPositions();
+        return positions;
     }
 
     /**
      * Checks the client's available funds, which equals their cash, plus gains, + credit limit
+     * @param client
      */
-    public double getAvailableFunds(int clientId) {
-        if(clients.get(clientId) == null) {
-            throw new IllegalArgumentException("Unknown client " + clientId);
-        }
+    public double getAvailableFunds(Client client) {
         // get cash value
-        double cash = getCashReserve(clientId);
+        double cash = getCashReserve(client);
         // get current portfolio value
-        double current = evaluatePortfolio(clientId);
+        double current = evaluatePortfolio(client);
         // get original portfolio value
-        double original = evaluateOriginalPortfolio(clientId);
+        double original = evaluateOriginalPortfolio(client);
         // get credit limit
-        double creditLimit = getCreditLimit(clientId);
+        double creditLimit = getCreditLimit(client);
         // if((reserve:cash+current-original) + limit >= (purchase:stock.price*quantity)) return ok, else return not ok
         return cash + current - original + creditLimit;
     }
@@ -88,8 +70,8 @@ public class PortfolioRepository {
         else {
             // this is a buy order
             // check if has available credit
-            double price = stock.getPrice();
-            double availableFunds = getAvailableFunds(clientId);
+            double price = pricingRepository.getPrice(stock);
+            double availableFunds = getAvailableFunds(client);
             double purchase = shares * price;
             if(availableFunds >= purchase) {
                 // if sufficient funds, place order
@@ -120,7 +102,11 @@ public class PortfolioRepository {
             throw new IllegalArgumentException("Client " + clientId + " does not exist");
         }
         List<Position> positions = getPositions(stock, clientId);
-        return positions.stream().mapToDouble(Position::getCurrentValue).sum();
+        return positions.stream().mapToDouble(this::getCurrentValue).sum();
+    }
+
+    private double getCurrentValue(Position position) {
+        return position.getShares() * pricingRepository.getPrice(position.getStock());
     }
 
     public double getTotalShares(int clientId, Stock stock) {
@@ -151,21 +137,17 @@ public class PortfolioRepository {
         return positions.stream().filter(position -> position.equals(proxyPosition)).collect(Collectors.toList());
     }
 
-    private double evaluatePortfolio(int clientId) {
+    private double evaluatePortfolio(Client client) {
         double sum = 0;
-        Client client = getClient(clientId);
-        if (client != null) {
-            List<Position> positions = client.getPositions();
-            if (positions != null) {
-                sum = positions.stream().mapToDouble(position -> position.getShares() * position.getStock().getPrice()).sum();
-            }
+        List<Position> positions = client.getPositions();
+        if (positions != null) {
+            sum = positions.stream().mapToDouble(position -> position.getShares() * pricingRepository.getPrice(position.getStock())).sum();
         }
         return sum;
     }
 
-    private double evaluateOriginalPortfolio(int clientId) {
+    private double evaluateOriginalPortfolio(Client client) {
         double sum = 0;
-        Client client = getClient(clientId);
         if (client != null) {
             List<Position> positions = client.getPositions();
             if (positions != null) {
@@ -175,26 +157,18 @@ public class PortfolioRepository {
         return sum;
     }
 
-    private double getCashReserve(int clientId) {
-        double cash = 0;
-        Client client = getClient(clientId);
-        if (client != null) {
-            cash = client.getCashOnDeposit();
-        }
+    private double getCashReserve(Client client) {
+        double cash = client.getCashOnDeposit();
         return cash;
     }
 
-    private double getCreditLimit(int clientId) {
-        double limit = 0;
-        Client client = getClient(clientId);
-        if (client != null) {
-            limit = client.getCreditLimit();
-        }
+    private double getCreditLimit(Client client) {
+        double limit = client.getCreditLimit();
         return limit;
     }
 
     public Client getClient(int clientId) {
-        Client client = clients.get(clientId);
+        Client client = clientRepository.clients.get(clientId);
         return client;
     }
 }

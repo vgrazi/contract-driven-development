@@ -29,10 +29,10 @@ public class PricingService {
     }
 
     public void updatePrices() {
-        pricing.values().forEach(holding ->{
-            double newPrice = holding.getPrice() * RandomWalk.monteCarlo();
-            holding.setPrice(newPrice);
-        });
+//        pricing.values().forEach(holding ->{
+//            double newPrice = holding.getPrice() * RandomWalk.monteCarlo();
+//            holding.setPrice(newPrice);
+//        });
     }
 
 }

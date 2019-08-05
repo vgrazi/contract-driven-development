@@ -7,10 +7,10 @@ import com.vgrazi.presentations.springcloudcontractconsumer.gateway.ClientBuySel
 import com.vgrazi.presentations.springcloudcontractconsumer.gateway.ClientBuySellResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.gateway.ClientHoldingResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.gateway.ClientHoldingsRequest;
+import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -21,19 +21,27 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ClientController {
 
     private final PortfolioRepository portfolioRepository;
+    private final ClientRepository clientRepository;
+    private final PricingRepository pricingRepository;
 
     private final RestTemplate restTemplate;
 
-    public ClientController(RestTemplate restTemplate, PortfolioRepository portfolioRepository) {
+    public ClientController(RestTemplate restTemplate, PortfolioRepository portfolioRepository, ClientRepository clientRepository, PricingRepository pricingRepository) {
         this.restTemplate = restTemplate;
         this.portfolioRepository = portfolioRepository;
+        this.clientRepository = clientRepository;
+        this.pricingRepository = pricingRepository;
     }
 
     @PostMapping(value = "/holdings", consumes = APPLICATION_JSON_VALUE)
     public ClientHoldingResponse getAllHoldings(@RequestBody ClientHoldingsRequest request) {
 
         int clientId = request.getClientId();
-        List<Position> positions = portfolioRepository.getHoldings(clientId);
+        Client client = portfolioRepository.getClient(clientId);
+        if(client == null) {
+            throw new IllegalArgumentException("Unknown client ID " + clientId);
+        }
+        List<Position> positions = portfolioRepository.getHoldings(client);
         return new ClientHoldingResponse(positions);
     }
 
@@ -43,24 +51,24 @@ public class ClientController {
         int clientId = request.getClientId();
         Stock stock = request.getStock();
         int shares = request.getShares();
+        Client client  = portfolioRepository.getClient(clientId);
 
-        boolean ok = shares < 0 || portfolioRepository.getAvailableFunds(clientId) >=  stock.getPrice() * shares;
+        boolean ok = shares < 0 || portfolioRepository.getAvailableFunds(client) >= pricingRepository.getPrice(stock) * shares;
 
-        if(ok) {
+        if (ok) {
             portfolioRepository.placeBuySellOrder(clientId, stock, shares);
-        }
-        else {
+        } else {
+            // todo: add call to provider to increase credit line
             // need to request an increase in creditLine
         }
-
 
         return new ClientBuySellResponse(clientId, stock, shares);
     }
 
-    /**
-     * Creates a new account for the specified client, and returns the client id
-     */
-    public int createAccount(String name, String taxId) {
-return 0;
+    @GetMapping("/create-client")
+    public Client createClient(@RequestParam String name,
+                               @RequestParam(name = "tax-id") String taxId){
+        // todo: move to client provider
+        return clientRepository.createClient(name, taxId);
     }
 }
