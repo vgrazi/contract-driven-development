@@ -1,9 +1,6 @@
 package com.vgrazi.presentations.springcloudcontractconsumer.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -18,7 +15,7 @@ public class Client {
     @Getter private int clientId;
     private String name;
     @Getter private String taxId;
-    @Getter private double creditLimit;
+    @Getter @Setter private double creditLimit;
     @Getter private double cashOnDeposit;
     @Getter private final List<Position> positions = new CopyOnWriteArrayList<>();
 }
