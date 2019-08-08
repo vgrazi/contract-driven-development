@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 @Repository
 public class PortfolioRepository {
 
-final ClientRepository clientRepository;
-final PricingRepository pricingRepository;
+    final ClientRepository clientRepository;
+    final PricingRepository pricingRepository;
+
     public PortfolioRepository(ClientRepository clientRepository, PricingRepository pricingRepository) {
         this.clientRepository = clientRepository;
         this.pricingRepository = pricingRepository;
@@ -24,20 +25,21 @@ final PricingRepository pricingRepository;
     }
 
     /**
-     * Checks the client's available funds, which equals their cash, plus gains, + credit limit
-     * @param client
+     * Checks the client's available funds, which equals their cash, plus gains, + credit limit - credit already used
      */
     public double getAvailableFunds(Client client) {
         // get cash value
         double cash = getCashReserve(client);
         // get current portfolio value
         double current = evaluatePortfolio(client);
-        // get original portfolio value
-        double original = evaluateOriginalPortfolio(client);
-        // get credit limit
+        // Credit line used is the original portfolio value
+        double used = evaluateOriginalPortfolio(client);
+        // if they made a profit, we add that to their available credit
+        double profit = current - used;
+        // get their total credit limit
         double creditLimit = getCreditLimit(client);
-        // if((reserve:cash+current-original) + limit >= (purchase:stock.price*quantity)) return ok, else return not ok
-        return cash + current - original + creditLimit;
+        // if((available:cash+profit-used) + limit >= (purchase:stock.price*quantity)) then authorize the buy
+        return (cash + profit) + (creditLimit - used);
     }
 
     /**
@@ -49,11 +51,10 @@ final PricingRepository pricingRepository;
         double price = pricingRepository.getPrice(stock);
         double availableFunds = getAvailableFunds(client);
         double purchase = shares * price;
-        if(availableFunds >= purchase) {
+        if (availableFunds >= purchase) {
             // if sufficient funds, place order
             client.getPositions().add(new Position(stock, shares, price));
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("client " + client + " has insufficient funds " + availableFunds + ". Does not cover purchase " + purchase);
         }
     }
@@ -74,8 +75,7 @@ final PricingRepository pricingRepository;
             if (position.getShares() <= shares) {
                 shares = position.getShares() - shares;
                 removeFirstPosition(position, client);
-            }
-            else {
+            } else {
                 position.setShares(position.getShares() - shares);
                 break;
             }
@@ -106,7 +106,7 @@ final PricingRepository pricingRepository;
 
     private void addPosition(Position position, int clientId) {
         Client client = getClient(clientId);
-        if(client == null) {
+        if (client == null) {
             throw new IllegalArgumentException("Client " + clientId + " does not exist");
         }
         List<Position> positions = client.getPositions();

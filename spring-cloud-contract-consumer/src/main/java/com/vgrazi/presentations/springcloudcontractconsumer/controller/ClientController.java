@@ -78,7 +78,7 @@ public class ClientController {
             } else {
                 // todo: add call to provider to increase credit line
                 // request credit increase for double the shortage. Server will return with max credit increase up to the requested amount
-                double creditIncrease = -surplus * 2;
+                double creditIncrease = -surplus;
                 if (creditIncrease < minCreditIncreaseRequest) {
                     creditIncrease = minCreditIncreaseRequest;
                 }

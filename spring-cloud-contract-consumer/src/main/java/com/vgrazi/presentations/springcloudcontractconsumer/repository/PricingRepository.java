@@ -42,7 +42,7 @@ public class PricingRepository {
     private synchronized void recalculatePrices() {
         stockPrices.forEach(stockPrice -> {
             double newPrice = stockPrice.getPrice() * RandomWalk.monteCarlo();
-            System.out.println("Changing price of " + stockPrice + newPrice);
+//            System.out.println("Changing price of " + stockPrice + newPrice);
             stockPrice.setPrice(newPrice);
         });
     }
