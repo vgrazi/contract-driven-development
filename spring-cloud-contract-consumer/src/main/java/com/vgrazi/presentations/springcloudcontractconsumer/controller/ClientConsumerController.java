@@ -28,40 +28,23 @@ public class ClientConsumerController {
     private PricingRepository pricingRepository;
     private RestTemplate restTemplate;
 
-    @Value("${min-credit-increase-request}")
-    private double minCreditIncreaseRequest;
-    @Value("${credit-increase-host}")
     private String creditIncreaseHost;
-    @Value("${credit-increase-port}")
-    private int creditIncreasePort = 8081;
-    @Value("${credit-increase-path}")
+    private int creditIncreasePort;
     private String creditIncreasePath;
 
     public ClientConsumerController(RestTemplate restTemplate, PortfolioRepository portfolioRepository,
-                                    ClientRepository clientRepository, PricingRepository pricingRepository) {
+                                    ClientRepository clientRepository, PricingRepository pricingRepository,
+                                    @Value("${credit-increase-host}") String creditIncreaseHost,
+                                    @Value("${credit-increase-port}") int creditIncreasePort,
+                                    @Value("${credit-increase-path}") String creditIncreasePath
+    ) {
         this.restTemplate = restTemplate;
         this.portfolioRepository = portfolioRepository;
         this.clientRepository = clientRepository;
         this.pricingRepository = pricingRepository;
-    }
-
-    @PostMapping(value = "/holdings", consumes = APPLICATION_JSON_VALUE)
-    public ClientHoldingResponse getAllHoldings(@RequestBody ClientHoldingsRequest request) {
-
-        int clientId = request.getClientId();
-        Client client = portfolioRepository.getClient(clientId);
-        if (client == null) {
-            throw new IllegalArgumentException("Unknown client ID " + clientId);
-        }
-        List<Position> positions = portfolioRepository.getHoldings(client);
-        return new ClientHoldingResponse(positions);
-    }
-
-    @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)
-    public String ping() throws IOException {
-        return "{" +
-                "\"ok\" = \"ok\"" +
-                "}";
+        this.creditIncreaseHost = creditIncreaseHost;
+        this.creditIncreasePort = creditIncreasePort;
+        this.creditIncreasePath = creditIncreasePath;
     }
 
     @PostMapping(value = "/buy-sell", consumes = APPLICATION_JSON_VALUE)
@@ -87,9 +70,6 @@ public class ClientConsumerController {
                 // todo: add call to provider to increase credit line
                 // request credit increase for double the shortage. Server will return with max credit increase up to the requested amount
                 double creditIncrease = -surplus;
-                if (creditIncrease < minCreditIncreaseRequest) {
-                    creditIncrease = minCreditIncreaseRequest;
-                }
 
                 URI uri = new URIBuilder()
                         .setScheme("http")
@@ -113,6 +93,25 @@ public class ClientConsumerController {
             }
         }
         return new ClientBuySellResponse(client, stock, shares);
+    }
+
+    @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)
+    public String ping() throws IOException {
+        return "{" +
+                "\"ok\" = \"ok\"" +
+                "}";
+    }
+
+    @PostMapping(value = "/holdings", consumes = APPLICATION_JSON_VALUE)
+    public ClientHoldingResponse getAllHoldings(@RequestBody ClientHoldingsRequest request) {
+
+        int clientId = request.getClientId();
+        Client client = portfolioRepository.getClient(clientId);
+        if (client == null) {
+            throw new IllegalArgumentException("Unknown client ID " + clientId);
+        }
+        List<Position> positions = portfolioRepository.getHoldings(client);
+        return new ClientHoldingResponse(positions);
     }
 
     @GetMapping("/create-client")

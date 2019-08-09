@@ -38,22 +38,43 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-contract-verifier</artifactId>
             <scope>test</scope>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--&lt;!&ndash;        todo: presentation - this let's us express contracts using the Groovy DSL&ndash;&gt;-->
+<!--            <artifactId>spring-cloud-contract-verifier</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
+<!--                todo: presentation - this is the spring cloud bom-->
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+<!--                todo: presentation - explain this-->
                 <type>pom</type>
+<!--                todo: presentation - explain this-->
+<!--                Set the scope to import, to import the spring cloud dependencies into our pom-->
                 <scope>import</scope>
             </dependency>
+<!--            <dependency>-->
+<!--                &lt;!&ndash;            todo: do we need this dependency??? &ndash;&gt;-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-contract-starters</artifactId>-->
+<!--                &lt;!&ndash;            todo: do we need this version??? &ndash;&gt;-->
+<!--                <version>2.1.1.RELEASE</version>-->
+<!--            </dependency>-->
+
         </dependencies>
     </dependencyManagement>
 
@@ -61,7 +82,9 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.cloud</groupId>
+<!--            todo: presentation - this is to generate tests and stubs-->
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+<!--            todo: do we need this version??? -->
                 <version>2.1.2.RELEASE</version>
                 <extensions>true</extensions>
             </plugin>

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Returns the client id, stock purchased, and number of shares
+ * Returns the client id, stock purchased, and number of shares executed
  */
 @AllArgsConstructor
 @NoArgsConstructor
