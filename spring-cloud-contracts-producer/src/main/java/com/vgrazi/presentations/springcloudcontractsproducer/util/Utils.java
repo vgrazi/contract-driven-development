@@ -3,8 +3,9 @@ package com.vgrazi.presentations.springcloudcontractsproducer.util;
 public class Utils {
     /**
      * This method rounds the request, mostly for display purpposes
-     * If the amount request is a multiple of 10,000, returns that value
-     * Otherwise,rounds up to the next 10,000
+     * If the amount request is a multiple of 10,000 (supplied as the "to" parameter
+     * for flexibility), returns that value
+     * Otherwise,rounds up to the next 10,000 ("to")
      */
     public static double round(double value, int to) {
         if (value % to == 0) {

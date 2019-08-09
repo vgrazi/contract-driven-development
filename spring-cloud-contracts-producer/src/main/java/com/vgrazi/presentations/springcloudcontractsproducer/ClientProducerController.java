@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ClientProducerController {
 
+    @Value("${rounding}")
+    private int rounding;
     @Value("${max-credit-line}")
     private double maxCreditline;
     @PostMapping("/request-credit-increase")
@@ -36,7 +38,7 @@ public class ClientProducerController {
         } else {
             rval = creditIncreaseRequest.getIncreaseAmount();
         }
-        double tryAgain = Utils.round(rval, 10_000);
+        double tryAgain = Utils.round(rval, rounding);
         if(tryAgain + currentCreditLine <= maxCreditline) {
             rval = tryAgain;
         }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -20,24 +21,24 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-public class ClientController {
+public class ClientConsumerController {
 
-    private final PortfolioRepository portfolioRepository;
-    private final ClientRepository clientRepository;
-    private final PricingRepository pricingRepository;
+    private PortfolioRepository portfolioRepository;
+    private ClientRepository clientRepository;
+    private PricingRepository pricingRepository;
+    private RestTemplate restTemplate;
+
     @Value("${min-credit-increase-request}")
     private double minCreditIncreaseRequest;
     @Value("${credit-increase-host}")
-    private String creditIncreaseHost = "localhost";
+    private String creditIncreaseHost;
     @Value("${credit-increase-port}")
     private int creditIncreasePort = 8081;
     @Value("${credit-increase-path}")
-    private String creditIncreasePath = "/request-credit-increase";
+    private String creditIncreasePath;
 
-
-    private final RestTemplate restTemplate;
-
-    public ClientController(RestTemplate restTemplate, PortfolioRepository portfolioRepository, ClientRepository clientRepository, PricingRepository pricingRepository) {
+    public ClientConsumerController(RestTemplate restTemplate, PortfolioRepository portfolioRepository,
+                                    ClientRepository clientRepository, PricingRepository pricingRepository) {
         this.restTemplate = restTemplate;
         this.portfolioRepository = portfolioRepository;
         this.clientRepository = clientRepository;
@@ -54,6 +55,13 @@ public class ClientController {
         }
         List<Position> positions = portfolioRepository.getHoldings(client);
         return new ClientHoldingResponse(positions);
+    }
+
+    @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)
+    public String ping() throws IOException {
+        return "{" +
+                "\"ok\" = \"ok\"" +
+                "}";
     }
 
     @PostMapping(value = "/buy-sell", consumes = APPLICATION_JSON_VALUE)
@@ -93,6 +101,9 @@ public class ClientController {
                 CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease);
 
                 Double increase = restTemplate.postForObject(uri, creditIncreaseRequest, Double.class);
+                if(increase == null) {
+                    increase = 0D;
+                }
                 client.setCreditLimit(client.getCreditLimit() + increase);
                 // need to request an increase in creditLine
                 if (increase < -surplus){
