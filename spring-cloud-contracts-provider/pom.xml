@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vgrazi.presentations</groupId>
-    <artifactId>spring-cloud-contracts-producer</artifactId>
+    <artifactId>spring-cloud-contracts-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-cloud-contracts-producer</name>
+    <name>spring-cloud-contracts-provider</name>
     <description>Contract Driven Development with Spring Cloud Contracts - Producer side</description>
 
     <properties>
