@@ -9,10 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vgrazi.presentations</groupId>
-    <artifactId>spring-cloud-contract-contracts</artifactId>
+    <artifactId>spring-cloud-contract-contract-repo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-cloud-contract-contracts</name>
+    <name>spring-cloud-contract-contract-repo</name>
     <description>Contract Driven Development with Spring Cloud Contracts - Producer side</description>
+
 
     <properties>
         <java.version>1.8</java.version>

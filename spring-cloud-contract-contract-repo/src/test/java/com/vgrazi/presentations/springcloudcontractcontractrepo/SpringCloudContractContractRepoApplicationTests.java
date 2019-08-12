@@ -1,4 +1,4 @@
-package com.vgrazi.presentations.springcloudcontractcontracts;
+package com.vgrazi.presentations.springcloudcontractcontractrepo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringCloudContractContractsApplicationTests {
+public class SpringCloudContractContractRepoApplicationTests {
 
     @Test
     public void contextLoads() {
