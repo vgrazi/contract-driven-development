@@ -14,11 +14,12 @@ Contract.make {
             contentType applicationJson()
         }
     }
-//    response {
-//        status 200
-//        value 110_000
-//        headers {
-//            contentType Double
-//        }
-//    }
+    response {
+        status 200
+        body """
+        {
+            "value" : "100000"
+        }
+        """
+    }
 }

@@ -25,33 +25,19 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-web</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--            <version>1.18.8</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-contract-verifier</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-<!--        todo: presentation - this let's us express contracts using the Groovy DSL-->
-    <artifactId>spring-cloud-contract-verifier</artifactId>
-    <scope>test</scope>
-</dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <!--        todo: presentation - this let's us express contracts using the Groovy DSL-->
+            <artifactId>spring-cloud-contract-verifier</artifactId>
+            <version>2.1.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -64,17 +50,9 @@
                 <version>${spring-cloud.version}</version>
 <!--                todo: presentation - explain this-->
                 <type>pom</type>
-<!--                todo: presentation - explain this-->
-<!--                Set the scope to import, to import the spring cloud dependencies into our pom-->
+<!--                todo: presentation - explain this - Set the scope to import, to import the spring cloud dependencies into our pom -->
                 <scope>import</scope>
             </dependency>
-        <dependency>
-            <!--            todo: do we need this dependency??? -->
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-contract-starters</artifactId>
-            <!--            todo: do we need this version??? -->
-            <version>2.1.1.RELEASE</version>
-        </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -82,17 +60,33 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.cloud</groupId>
-<!--            todo: presentation - this is to generate tests and stubs-->
-                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-<!--            todo: do we need this version??? -->
-                <version>2.1.2.RELEASE</version>
-                <extensions>true</extensions>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+<!--            todo: presentation - this is to generate tests and stubs -->
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+<!--                <version>2.1.2.RELEASE</version>-->
+
+                <extensions>true</extensions>
+                <configuration>
+                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractcontracts.BaseTestClass</baseClassForTests>
+<!--    todo: study all configuration options-->
+<!--                    <contractsWorkOffline>true</contractsWorkOffline>-->
+<!--                    <contractDependency>-->
+<!--                        <groupId>com.vgrazi.presentations</groupId>-->
+<!--                        <artifactId>spring-cloud-contract-consumer</artifactId>-->
+<!--                        <version>0.0.1-SNAPSHOT</version>-->
+<!--                    </contractDependency>-->
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
