@@ -16,10 +16,13 @@ public class ClientProviderController {
      * If that is too much, returns the maximum credit line they can have
      * If they are already at the maximum, throws an exception
      */
-    @Value("${rounding}")
     private int rounding;
-    @Value("${max-credit-line}")
     private double maxCreditline;
+
+    public ClientProviderController(@Value("${rounding}") int rounding, @Value("${max-credit-line}") double maxCreditline) {
+        this.rounding = rounding;
+        this.maxCreditline = maxCreditline;
+    }
 
     @PostMapping("/request-credit-increase")
     public CreditIncreaseResponse handleCreditIncreaseRequest(@RequestBody CreditIncreaseRequest creditIncreaseRequest) {

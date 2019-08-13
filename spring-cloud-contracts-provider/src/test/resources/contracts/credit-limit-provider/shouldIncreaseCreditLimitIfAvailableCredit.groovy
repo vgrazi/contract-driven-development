@@ -7,7 +7,8 @@ Contract.make {
         body """
         {
             "currentCreditLine" : 100000.0,
-            "increaseAmount" : 19000.0
+            "increaseAmount" : 19000.0,
+            "clientId" : 1
         }
         """
         headers {

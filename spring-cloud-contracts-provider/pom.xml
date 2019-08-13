@@ -82,6 +82,7 @@
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
+                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractsprovider.BaseTestClass</baseClassForTests>
 <!--                    <contractsMode>REMOTE</contractsMode>-->
 <!--                    <contractsRepositoryUrl></contractsRepositoryUrl>-->
 <!--                    <contractDependency>-->
@@ -90,7 +91,6 @@
 <!--                        <version>+</version>-->
 <!--                    </contractDependency>-->
 <!--                    <contractsPath></contractsPath>-->
-                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractsprovider.BaseTestClass</baseClassForTests>
                     <!--    todo: study all configuration options-->
 <!--                    <contractsWorkOffline>true</contractsWorkOffline>-->
 <!--                    <contractDependency>-->
