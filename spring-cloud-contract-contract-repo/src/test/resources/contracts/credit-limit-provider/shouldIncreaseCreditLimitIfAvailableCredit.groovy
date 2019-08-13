@@ -21,5 +21,8 @@ Contract.make {
             "value" : "100000"
         }
         """
+        headers {
+            contentType textPlain()
+        }
     }
 }
