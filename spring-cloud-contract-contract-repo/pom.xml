@@ -77,7 +77,7 @@
 
                 <extensions>true</extensions>
                 <configuration>
-                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractcontracts.BaseTestClass</baseClassForTests>
+                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractcontractrepo.BaseTestClass</baseClassForTests>
 <!--    todo: study all configuration options-->
 <!--                    <contractsWorkOffline>true</contractsWorkOffline>-->
 <!--                    <contractDependency>-->
