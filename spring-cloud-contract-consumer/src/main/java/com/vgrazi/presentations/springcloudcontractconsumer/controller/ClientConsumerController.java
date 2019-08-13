@@ -78,13 +78,12 @@ public class ClientConsumerController {
                         .setPath(creditIncreasePath)
                         .build();
                 new DefaultUriBuilderFactory().builder().build();
-                CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease);
+                CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, clientId);
 
-                Double increase = restTemplate.postForObject(uri, creditIncreaseRequest, Double.class);
-                if(increase == null) {
-                    increase = 0D;
-                }
+                CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
+                double increase = response.getIncrease();
                 client.setCreditLimit(client.getCreditLimit() + increase);
+                surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
                 // need to request an increase in creditLine
                 if (increase < -surplus){
                     throw new IllegalArgumentException("Insufficient credit - apply for increase");

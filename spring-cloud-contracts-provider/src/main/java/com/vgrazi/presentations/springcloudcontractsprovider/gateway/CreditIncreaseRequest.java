@@ -7,4 +7,5 @@ import lombok.Getter;
 public class CreditIncreaseRequest {
     @Getter private double currentCreditLine;
     @Getter private double increaseAmount;
+    @Getter private double clientId;
 }

@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
+import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 // todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
 //@AutoConfigureMockMvc
+@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -45,10 +48,11 @@ public class SpringCloudContractConsumerApplicationTests {
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
         controller = new ClientConsumerController(new RestTemplate(), portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
-                8081, "/request-credit-increase");
+                9080, "/request-credit-increase");
 
         Client client = new Client(1, "Jonn Jonz", "12345", 1_000_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
+        when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
 // todo: Presentation: at this point, we traditionally might stub the rest call.
 //  However that is not a scalable solution, since the endpoint might change!
@@ -74,7 +78,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 1,\n" +
                                 "        \"taxId\": \"12345\",\n" +
-                                "        \"creditLimit\": 1150000.0,\n" +
+                                "        \"creditLimit\": 1000000.0,\n" +
                                 "        \"cashOnDeposit\": 1000.0,\n" +
                                 "        \"positions\": []\n" +
                                 "    },\n" +
