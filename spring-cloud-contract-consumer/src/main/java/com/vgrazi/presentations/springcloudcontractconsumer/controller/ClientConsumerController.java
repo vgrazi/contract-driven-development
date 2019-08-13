@@ -86,9 +86,12 @@ public class ClientConsumerController {
                 surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
                 // need to request an increase in creditLine
                 if (increase < -surplus){
-                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
+                    return new ClientBuySellResponse(client, stock, 0);
+//                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
                 }
-                portfolioRepository.placeBuyOrder(client, stock, shares);
+                else {
+                    portfolioRepository.placeBuyOrder(client, stock, shares);
+                }
             }
         }
         return new ClientBuySellResponse(client, stock, shares);
