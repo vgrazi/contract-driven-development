@@ -10,4 +10,6 @@ import lombok.Setter;
 public class CreditIncreaseResponse {
     @Getter @Setter
     private double increaseAmount;
+    @Getter @Setter
+    private int clientId;
 }

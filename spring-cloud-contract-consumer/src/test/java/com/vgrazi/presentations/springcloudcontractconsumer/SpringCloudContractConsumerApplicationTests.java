@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
-//@AutoConfigureMockMvc
 //@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
@@ -50,7 +49,7 @@ public class SpringCloudContractConsumerApplicationTests {
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
-        Client client = new Client(1, "Jonn Jonz", "12345", 1_000_000, 1000);
+        Client client = new Client(1, "Jonn Jonz", "12345", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
@@ -78,7 +77,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 1,\n" +
                                 "        \"taxId\": \"12345\",\n" +
-                                "        \"creditLimit\": 1000000,\n" +
+                                "        \"creditLimit\": 120000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +
                                 "    },\n" +

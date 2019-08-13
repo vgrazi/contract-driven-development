@@ -6,8 +6,8 @@ Contract.make {
         url '/request-credit-increase'
         body """
         {
-            "currentCreditLine" : 1000000.0,
-            "increaseAmount" : 120000.0
+            "currentCreditLine" : 100000.0,
+            "increaseAmount" : 19000.0
         }
         """
         headers {
@@ -19,7 +19,7 @@ Contract.make {
         body """
         {
             "clientId" : 1,
-            "increase" : 100000
+            "increaseAmount" : 20000
         }
         """
         headers {
