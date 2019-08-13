@@ -41,6 +41,7 @@ public class SpringCloudContractsProviderApplicationTests {
     public void shouldDenyIncrease() throws Exception {
         try {
             shouldIncreaseCreditLineWhenAvailableCredit(1_000_000, 1, 1_000);
+            fail("Should throw an exception");
         } catch (NestedServletException e) {
             if (!(e.getCause() instanceof IllegalArgumentException)) {
                 fail(e);
