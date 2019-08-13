@@ -9,39 +9,34 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ClientProviderController {
 
+    /**
+     * If the user has available credit ($1M),
+     * If the request is not a multiple of 10K rounds up to the next 10K
+     * Then adds their current credit line to the request
+     * If that is too much, returns the maximum credit line they can have
+     * If they are already at the maximum, throws an exception
+     */
     @Value("${rounding}")
     private int rounding;
     @Value("${max-credit-line}")
     private double maxCreditline;
+
     @PostMapping("/request-credit-increase")
-    public CreditIncreaseResponse handleCreditIncreaseRequest(@RequestBody CreditIncreaseRequest creditIncreaseRequest){
+    public CreditIncreaseResponse handleCreditIncreaseRequest(@RequestBody CreditIncreaseRequest creditIncreaseRequest) {
         double currentCreditLine = creditIncreaseRequest.getCurrentCreditLine();
-        double totalCreditLine = currentCreditLine + creditIncreaseRequest.getIncreaseAmount();
-//        if(true) {
-//            return 0.0;
-//        }
-        double increase = 0;
+        double increaseRounded = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
+        double totalCreditLine = currentCreditLine + increaseRounded;
+
+        double increase;
+
         if (totalCreditLine > maxCreditline) {
-            double revised = creditIncreaseRequest.getIncreaseAmount() - (totalCreditLine - maxCreditline);
-            if(revised > 0) {
-                increase = revised;
-            }
-            else {
-                revised = maxCreditline - currentCreditLine;
-                if(revised > 0) {
-                    // can't give em what they want - give em what they can have
-                    increase = revised;
-                }
-                if (increase == 0) {
-                    throw new IllegalArgumentException("Credit line has reached its max");
-                }
+            // request is for more than the max. Bring them to the max
+            increase = maxCreditline - currentCreditLine;
+            if (increase <= 0) {
+                throw new IllegalArgumentException("Credit line has reached its max");
             }
         } else {
-            increase = creditIncreaseRequest.getIncreaseAmount();
-        }
-        double tryAgain = Utils.round(increase, rounding);
-        if(tryAgain + currentCreditLine <= maxCreditline) {
-            increase = tryAgain;
+            increase = increaseRounded;
         }
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase);
     }

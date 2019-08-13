@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 // todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
 //@AutoConfigureMockMvc
-@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -78,8 +78,8 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 1,\n" +
                                 "        \"taxId\": \"12345\",\n" +
-                                "        \"creditLimit\": 1000000.0,\n" +
-                                "        \"cashOnDeposit\": 1000.0,\n" +
+                                "        \"creditLimit\": 1000000,\n" +
+                                "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +
                                 "    },\n" +
                                 "    \"stock\": {\n" +

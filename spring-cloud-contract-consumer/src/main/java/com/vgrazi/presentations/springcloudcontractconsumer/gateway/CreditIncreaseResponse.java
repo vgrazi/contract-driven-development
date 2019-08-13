@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreditIncreaseResponse {
     @Getter @Setter
-    private double increase;
+    private double increaseAmount;
 }

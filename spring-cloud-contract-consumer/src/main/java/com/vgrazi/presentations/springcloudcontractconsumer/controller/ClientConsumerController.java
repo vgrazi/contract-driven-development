@@ -81,7 +81,7 @@ public class ClientConsumerController {
                 CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, clientId);
 
                 CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
-                double increase = response.getIncrease();
+                double increase = response.getIncreaseAmount();
                 client.setCreditLimit(client.getCreditLimit() + increase);
                 surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
                 // need to request an increase in creditLine
