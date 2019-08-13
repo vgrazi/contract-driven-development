@@ -20,7 +20,8 @@ Contract.make {
         body """
         {
             "clientId" : 2,
-            "increaseAmount" : 0
+            "increaseAmount" : 0,
+            "denialReason" : "Credit line has reached its max. Available: 900000.0"
         }
         """
         headers {

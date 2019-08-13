@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.util.NestedServletException;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,30 +24,23 @@ public class SpringCloudContractsProviderApplicationTests {
 
     @Test
     public void shouldIncreaseCreditLineTo10_000() throws Exception {
-        shouldIncreaseCreditLineWhenAvailableCredit(0, 1_000, 10_000);
+        postRequest(0, 1_000, 10_000, null);
     }
     @Test
     public void shouldIncreaseCreditLineTo100_000() throws Exception {
-        shouldIncreaseCreditLineWhenAvailableCredit(90_000, 98_000, 100_000);
+        postRequest(90_000, 98_000, 100_000, null);
     }
 
     @Test
     public void shouldIncreaseCreditLineTo1000_000() throws Exception {
-        shouldIncreaseCreditLineWhenAvailableCredit(999_000, 98_000, 1_000);
+        postRequest(900_000, 98_000, 100_000, null);
     }
 
     @Test
     public void shouldDenyIncrease() throws Exception {
-        try {
-            shouldIncreaseCreditLineWhenAvailableCredit(1_000_000, 1, 1_000);
-            fail("Should throw an exception");
-        } catch (NestedServletException e) {
-            if (!(e.getCause() instanceof IllegalArgumentException)) {
-                fail(e);
-            }
-        }
+            postRequest(1_000_000, 1, 0, "Credit line has reached its max. Available: 0.0");
     }
-    private void shouldIncreaseCreditLineWhenAvailableCredit(double currentCreditLine, double increaseAmount, double expectedIncrease) throws Exception {
+    private void postRequest(double currentCreditLine, double increaseAmount, double expectedIncrease, String denialReason) throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/request-credit-increase")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +58,8 @@ public class SpringCloudContractsProviderApplicationTests {
                                 "\"increaseAmount\":" +
                                 expectedIncrease +
                                 ",\n" +
-                                "\"clientId\":1" +
+                                "\"clientId\":1," +
+                                "\"denialReason\":" + (denialReason != null ? "\"" + denialReason + "\"" : denialReason) +
                                 "}")
                 )
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

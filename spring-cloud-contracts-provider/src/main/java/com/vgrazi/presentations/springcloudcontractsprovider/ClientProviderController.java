@@ -24,23 +24,21 @@ public class ClientProviderController {
         this.maxCreditline = maxCreditline;
     }
 
+    /**
+     * If the client has available credit to cover the request, returns that amount.
+     * Otherwise returns a response with 0 increase and a denial reason
+     */
     @PostMapping("/request-credit-increase")
     public CreditIncreaseResponse handleCreditIncreaseRequest(@RequestBody CreditIncreaseRequest creditIncreaseRequest) {
         double currentCreditLine = creditIncreaseRequest.getCurrentCreditLine();
-        double increaseRounded = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
-        double totalCreditLine = currentCreditLine + increaseRounded;
-
-        double increase;
+        double increase = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
+        double totalCreditLine = currentCreditLine + increase;
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            increase = maxCreditline - currentCreditLine;
-            if (increase <= 0) {
-                throw new IllegalArgumentException("Credit line has reached its max");
-            }
-        } else {
-            increase = increaseRounded;
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine));
         }
+
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase);
     }
 

@@ -20,7 +20,8 @@ Contract.make {
         body """
         {
             "clientId" : 1,
-            "increaseAmount" : 20000
+            "increaseAmount" : 20000,
+            "denialReason": null
         }
         """
         headers {
