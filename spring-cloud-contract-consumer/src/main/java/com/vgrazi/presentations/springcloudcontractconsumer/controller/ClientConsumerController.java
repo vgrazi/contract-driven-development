@@ -16,6 +16,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -82,11 +84,12 @@ public class ClientConsumerController {
 
                 CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
                 double increase = response.getIncreaseAmount();
+                String date = response.getDate();
                 client.setCreditLimit(client.getCreditLimit() + increase);
                 surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
                 // need to request an increase in creditLine
                 if (increase < -surplus){
-                    return new ClientBuySellResponse(client, stock, 0);
+                    return new ClientBuySellResponse(client, stock, 0, date);
 //                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
                 }
                 else {
@@ -94,7 +97,7 @@ public class ClientConsumerController {
                 }
             }
         }
-        return new ClientBuySellResponse(client, stock, shares);
+        return new ClientBuySellResponse(client, stock, shares, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     }
 
     @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)

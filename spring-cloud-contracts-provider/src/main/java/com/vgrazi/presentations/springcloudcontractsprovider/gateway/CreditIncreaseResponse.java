@@ -12,4 +12,15 @@ public class CreditIncreaseResponse {
     private double clientId;
     @Getter @Setter
     private double increaseAmount;
+
+    @Getter @Setter
+    private String denialReason;
+
+    @Getter private String date;
+
+    public CreditIncreaseResponse(double clientId, double increaseAmount, String date) {
+        this.clientId = clientId;
+        this.increaseAmount = increaseAmount;
+        this.date = date;
+    }
 }

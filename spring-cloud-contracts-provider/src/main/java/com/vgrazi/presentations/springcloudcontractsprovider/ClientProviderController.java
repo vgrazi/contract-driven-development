@@ -6,6 +6,9 @@ import com.vgrazi.presentations.springcloudcontractsprovider.util.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 public class ClientProviderController {
 
@@ -36,10 +39,10 @@ public class ClientProviderController {
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine));
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         }
 
-        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase);
+        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     }
 
 }

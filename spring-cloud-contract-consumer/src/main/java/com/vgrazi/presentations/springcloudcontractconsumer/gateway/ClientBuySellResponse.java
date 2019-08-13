@@ -16,4 +16,5 @@ public class ClientBuySellResponse {
     @Getter private Client client;
     @Getter private Stock stock;
     @Getter private int shares;
+    @Getter private String date;
 }

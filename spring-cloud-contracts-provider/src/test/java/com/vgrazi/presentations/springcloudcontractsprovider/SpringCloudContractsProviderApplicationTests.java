@@ -26,6 +26,7 @@ public class SpringCloudContractsProviderApplicationTests {
     public void shouldIncreaseCreditLineTo10_000() throws Exception {
         postRequest(0, 1_000, 10_000, null);
     }
+
     @Test
     public void shouldIncreaseCreditLineTo100_000() throws Exception {
         postRequest(90_000, 98_000, 100_000, null);
@@ -38,8 +39,9 @@ public class SpringCloudContractsProviderApplicationTests {
 
     @Test
     public void shouldDenyIncrease() throws Exception {
-            postRequest(1_000_000, 1, 0, "Credit line has reached its max. Available: 0.0");
+        postRequest(1_000_000, 1, 0, "Credit line has reached its max. Available: 0.0");
     }
+
     private void postRequest(double currentCreditLine, double increaseAmount, double expectedIncrease, String denialReason) throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/request-credit-increase")
@@ -58,8 +60,8 @@ public class SpringCloudContractsProviderApplicationTests {
                                 "\"increaseAmount\":" +
                                 expectedIncrease +
                                 ",\n" +
-                                "\"clientId\":1," +
-                                "\"denialReason\":" + (denialReason != null ? "\"" + denialReason + "\"" : denialReason) +
+                                "\"clientId\":1" +
+                                (denialReason != null ? ",\"denialReason\":" + "\"" + denialReason + "\"" : "") +
                                 "}")
                 )
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

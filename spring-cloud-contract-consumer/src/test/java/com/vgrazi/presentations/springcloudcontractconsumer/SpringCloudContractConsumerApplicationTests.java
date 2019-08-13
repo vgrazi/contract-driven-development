@@ -132,7 +132,8 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"symbol\": \"MSFT\",\n" +
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
-                                "    \"shares\": 0\n" +
+                                "    \"shares\": 0\n," +
+                                "    \"date\": \"2019-08-14\"" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
