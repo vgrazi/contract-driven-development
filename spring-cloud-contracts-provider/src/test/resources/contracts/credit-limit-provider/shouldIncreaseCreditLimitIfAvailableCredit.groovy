@@ -1,8 +1,5 @@
 import org.springframework.cloud.contract.spec.Contract
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 Contract.make {
     request {
         method 'POST'
@@ -19,7 +16,7 @@ Contract.make {
     response {
         status 200
         body(
-                "clientId": 1,
+                "clientId": fromRequest().body('$.clientId'),
                 "increaseAmount": 20000,
                 "denialReason": null,
                 "date": $(producer(anyDate()), consumer("2019-08-14"))
