@@ -5,8 +5,8 @@ Contract.make {
         method 'POST'
         url '/request-credit-increase'
         body(
-                "currentCreditLine": 100000.0,
-                "increaseAmount": 19000.0,
+                "currentCreditLine": $(consumer(anyDouble()), producer(100_000)),
+                "increaseAmount": $(consumer(anyDouble()), producer(19_000)),
                 "clientId": 1
         )
         headers {
