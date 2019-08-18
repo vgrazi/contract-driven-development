@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -125,5 +126,11 @@ public class ClientConsumerController {
                                @RequestParam(name = "tax-id") String taxId) {
         // todo: move to client provider
         return clientRepository.createClient(name, taxId);
+    }
+
+    @PostConstruct
+    private void postContruct() {
+        createClient("Victor", "24681");
+        createClient("John", "12345");
     }
 }
