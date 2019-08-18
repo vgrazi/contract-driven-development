@@ -22,6 +22,7 @@ public class PricingRepository {
         addStock("AAPL", "NASD", 207.74);
         addStock("GOOG", "NASD", 118.29);
         addStock("MSFT", "NASD", 141.34);
+        addStock("IBM", "NYSE", 133.76);
         addStock("FB", "NASD", 199.75);
         addStock("XOM", "NYSE", 74.81);
         addStock("PFE", "NYSE", 43.09);

@@ -53,7 +53,7 @@ public class PortfolioRepository {
         double purchase = shares * price;
         if (availableFunds >= purchase) {
             // if sufficient funds, place order
-            client.getPositions().add(new Position(stock, shares, price));
+            client.addPosition(new Position(stock, shares, price));
         } else {
             throw new IllegalArgumentException("client " + client + " has insufficient funds " + availableFunds + ". Does not cover purchase " + purchase);
         }
@@ -133,7 +133,7 @@ public class PortfolioRepository {
         if (client != null) {
             List<Position> positions = client.getPositions();
             if (positions != null) {
-                sum = positions.stream().mapToDouble(position -> position.getShares() * position.getPurchasePrice()).sum();
+                sum = positions.stream().mapToDouble(position -> position.getShares() * position.getAveragePrice()).sum();
             }
         }
         return sum;

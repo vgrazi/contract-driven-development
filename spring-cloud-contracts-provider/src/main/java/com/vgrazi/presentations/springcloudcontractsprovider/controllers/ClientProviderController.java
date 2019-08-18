@@ -1,4 +1,4 @@
-package com.vgrazi.presentations.springcloudcontractsprovider;
+package com.vgrazi.presentations.springcloudcontractsprovider.controllers;
 
 import com.vgrazi.presentations.springcloudcontractsprovider.gateway.CreditIncreaseRequest;
 import com.vgrazi.presentations.springcloudcontractsprovider.gateway.CreditIncreaseResponse;

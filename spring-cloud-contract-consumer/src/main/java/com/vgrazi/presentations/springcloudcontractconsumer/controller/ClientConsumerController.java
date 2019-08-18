@@ -59,12 +59,13 @@ public class ClientConsumerController {
         if (client == null) {
             throw new IllegalArgumentException("Unknown client id " + clientId);
         }
+        double price = pricingRepository.getPrice(stock);
         if (shares < 0) {
             portfolioRepository.placeSellOrder(client, stock, -shares);
         }
         // disregard 0 share purchases, just display the holdings
         else if (shares > 0) {
-            double surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
+            double surplus = portfolioRepository.getAvailableFunds(client) - price * shares;
 
             if (surplus >= 0) {
                 portfolioRepository.placeBuyOrder(client, stock, shares);
@@ -86,10 +87,10 @@ public class ClientConsumerController {
                 double increase = response.getIncreaseAmount();
                 String date = response.getDate();
                 client.setCreditLimit(client.getCreditLimit() + increase);
-                surplus = portfolioRepository.getAvailableFunds(client) - pricingRepository.getPrice(stock) * shares;
+                surplus = portfolioRepository.getAvailableFunds(client) - price * shares;
                 // need to request an increase in creditLine
                 if (increase < -surplus){
-                    return new ClientBuySellResponse(client, stock, 0, date);
+                    return new ClientBuySellResponse(client, stock, 0, price, date);
 //                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
                 }
                 else {
@@ -97,7 +98,7 @@ public class ClientConsumerController {
                 }
             }
         }
-        return new ClientBuySellResponse(client, stock, shares, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        return new ClientBuySellResponse(client, stock, shares, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     }
 
     @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)

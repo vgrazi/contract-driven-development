@@ -1,5 +1,6 @@
 package com.vgrazi.presentations.springcloudcontractsprovider;
 
+import com.vgrazi.presentations.springcloudcontractsprovider.controllers.ClientProviderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.Before;
 

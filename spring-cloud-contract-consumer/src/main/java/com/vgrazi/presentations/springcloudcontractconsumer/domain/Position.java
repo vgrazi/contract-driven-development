@@ -16,5 +16,5 @@ import lombok.*;
 public class Position {
     @Getter private Stock stock;
     @EqualsAndHashCode.Exclude @Getter @Setter private int shares;
-    @EqualsAndHashCode.Exclude @Getter private double purchasePrice;
+    @EqualsAndHashCode.Exclude @Getter @Setter private double averagePrice;
 }
