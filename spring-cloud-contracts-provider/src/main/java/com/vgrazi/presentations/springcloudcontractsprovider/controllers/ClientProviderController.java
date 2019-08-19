@@ -29,6 +29,7 @@ public class ClientProviderController {
     private int rounding;
     private double defaultCreditLine;
     private double maxCreditline;
+    private boolean extractLineFromRequest = true;
 
     public ClientProviderController(@Value("${rounding}") int rounding, @Value("${default-credit-line}") double defaultCreditLine, @Value("${max-credit-line}") double maxCreditline) {
         this.rounding = rounding;
@@ -56,18 +57,28 @@ public class ClientProviderController {
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     }
 
-    private void updateCreditLine(int clientId, double totalCreditLine) {
+    public void updateCreditLine(int clientId, double totalCreditLine) {
         Client client = getClient(clientId);
-        client.setCreditLimit(totalCreditLine);
+        if(client == null) {
+            client = new Client(clientId, totalCreditLine);
+            clients.put(clientId, client);
+        }
+        else {
+            client.setCreditLimit(totalCreditLine);
+        }
     }
 
-    private double getCurrentCreditLine(@RequestBody CreditIncreaseRequest request) {
-        Client client = getClient(request.getClientId());
-        if (client == null) {
-            client = new Client(request.getClientId(), defaultCreditLine);
-            clients.put(request.getClientId(), client);
+    public double getCurrentCreditLine(@RequestBody CreditIncreaseRequest request) {
+        if (extractLineFromRequest) {
+            return request.getCurrentCreditLine();
+        } else {
+            Client client = getClient(request.getClientId());
+            if (client == null) {
+                client = new Client(request.getClientId(), defaultCreditLine);
+                clients.put(request.getClientId(), client);
+            }
+            return client.getCreditLimit();
         }
-        return client.getCreditLimit();
     }
 
     private Client getClient(int clientId) {

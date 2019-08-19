@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +38,11 @@ public class SpringCloudContractsProviderApplicationTests {
 
     @Test
     public void shouldDenyIncrease() throws Exception {
+//        ClientProviderController clientProviderController = spy(new ClientProviderController(10_000, 0, 1_000_000));
+//        doReturn(1_000_000D).when(clientProviderController).getCurrentCreditLine(any(CreditIncreaseRequest.class));
+//        doNothing().when(clientProviderController).updateCreditLine(anyInt(), anyDouble());
+//        mockMvc = MockMvcBuilders.standaloneSetup(clientProviderController).build();
+
         postRequest(1_000_000, 1, 0, "Credit line has reached its max. Available: 0.0");
     }
 

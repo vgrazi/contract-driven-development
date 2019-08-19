@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
-//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -49,7 +49,7 @@ public class SpringCloudContractConsumerApplicationTests {
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
-        Client client = new Client(1, "John Jones", "12345", 100_000, 1000);
+        Client client = new Client(1, "Mary Smith", "12345", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
@@ -96,7 +96,7 @@ public class SpringCloudContractConsumerApplicationTests {
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
-        Client client = new Client(1, "John Jones", "12345", 100_000, 1000);
+        Client client = new Client(2, "John Jones", "12345", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
@@ -122,7 +122,7 @@ public class SpringCloudContractConsumerApplicationTests {
                 .andExpect(MockMvcResultMatchers.content()
                         .json("{\n" +
                                 "    \"client\": {\n" +
-                                "        \"clientId\": 1,\n" +
+                                "        \"clientId\": 2,\n" +
                                 "        \"taxId\": \"12345\",\n" +
                                 "        \"creditLimit\": 100000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +

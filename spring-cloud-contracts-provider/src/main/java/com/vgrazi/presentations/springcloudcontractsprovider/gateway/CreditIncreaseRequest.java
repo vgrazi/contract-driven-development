@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditIncreaseRequest {
-    @Getter private double currentCreditLine;
     @Getter private double increaseAmount;
     @Getter private int clientId;
+    @Getter private double currentCreditLine;
 }
