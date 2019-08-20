@@ -138,7 +138,7 @@ public class ClientConsumerController {
 
     @PostConstruct
     private void postContruct() {
-        createClient("Victor", "24681");
-        createClient("John", "12345");
+        createClient("Victor", "123-45-6789");
+        createClient("John", "246-80-135");
     }
 }

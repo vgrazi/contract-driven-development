@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestCases {
+public class TestRounding {
     @Test
     public void testAdjust() {
         double v;
