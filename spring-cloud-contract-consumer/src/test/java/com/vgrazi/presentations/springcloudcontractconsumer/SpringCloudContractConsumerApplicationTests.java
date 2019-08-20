@@ -60,9 +60,6 @@ public class SpringCloudContractConsumerApplicationTests {
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
-// todo: Presentation: at this point, we traditionally might stub the rest call.
-//  However that is not a scalable solution, since the endpoint might change!
-//  For this, we need contract-generated stubs.
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(
@@ -108,10 +105,6 @@ public class SpringCloudContractConsumerApplicationTests {
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
-// todo: Presentation: at this point, we traditionally might stub the rest call.
-//  However that is not a scalable solution, since the endpoint might change!
-//  For this, we need contract-generated stubs.
-// when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class))).thenReturn(150_000.0);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(
