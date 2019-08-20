@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
 //@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
