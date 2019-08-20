@@ -45,30 +45,23 @@
         </dependency>
 
         <dependency>
-<!--Todo: Presentation - this is required for Rest Assured
-     and let's us express contracts using the Groovy DSL -->
+<!-- required for Rest Assured; Also let's us express contracts using the Groovy DSL -->
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-contract-verifier</artifactId>
             <scope>test</scope>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-contract-starters</artifactId>-->
-<!--            <version>2.1.2.RELEASE</version>-->
-<!--        </dependency>-->
 
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-<!--                todo: presentation - this is the spring cloud bom-->
+<!--  this is the spring cloud bom-->
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
-<!--                todo: presentation - explain this - Set the scope to import, to import the spring cloud dependencies into our pom -->
+<!--  Set the scope to import, to import the spring cloud dependencies into our pom -->
                 <scope>import</scope>
             </dependency>
         </dependencies>
@@ -82,27 +75,12 @@
 <extensions>true</extensions>
             </plugin>
             <plugin>
-<!--            todo: presentation - this is to generate tests and stubs -->
+<!--  this is to generate tests and stubs -->
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
                     <baseClassForTests>com.vgrazi.presentations.springcloudcontractsprovider.BaseTestClass</baseClassForTests>
-<!--                    <contractsMode>REMOTE</contractsMode>-->
-<!--                    <contractsRepositoryUrl></contractsRepositoryUrl>-->
-<!--                    <contractDependency>-->
-<!--                        <groupId></groupId>-->
-<!--                        <artifactId></artifactId>-->
-<!--                        <version>+</version>-->
-<!--                    </contractDependency>-->
-<!--                    <contractsPath></contractsPath>-->
-                    <!--    todo: study all configuration options-->
-<!--                    <contractsWorkOffline>true</contractsWorkOffline>-->
-<!--                    <contractDependency>-->
-<!--                        <groupId>com.vgrazi.presentations</groupId>-->
-<!--                        <artifactId>spring-cloud-contract-consumer</artifactId>-->
-<!--                        <version>0.0.1-SNAPSHOT</version>-->
-<!--                    </contractDependency>-->
                 </configuration>
             </plugin>
 
