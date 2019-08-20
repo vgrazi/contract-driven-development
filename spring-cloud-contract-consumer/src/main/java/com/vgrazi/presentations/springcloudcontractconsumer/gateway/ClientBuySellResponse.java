@@ -18,4 +18,5 @@ public class ClientBuySellResponse {
     @Getter private int shares;
     @Getter private double price;
     @Getter private String date;
+    @Getter private String denialReason;
 }

@@ -75,23 +75,17 @@ public class ClientConsumerController {
                 // request credit increase for double the shortage. Server will return with max credit increase up to the requested amount
                 double creditIncrease = -surplus;
 
-                URI uri = new URIBuilder()
-                        .setScheme("http")
-                        .setHost(creditIncreaseHost)
-                        .setPort(creditIncreasePort)
-                        .setPath(creditIncreasePath)
-                        .build();
-                new DefaultUriBuilderFactory().builder().build();
-                CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, clientId);
-
-                CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
+                CreditIncreaseResponse response = requestCreditLineIncrease(client, creditIncrease);
+                if(response.getDenialReason() != null) {
+                    return new ClientBuySellResponse(client, stock, 0, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), response.getDenialReason());
+                }
                 double increase = response.getIncreaseAmount();
                 String date = response.getDate();
                 client.setCreditLimit(client.getCreditLimit() + increase);
                 surplus = portfolioRepository.getAvailableFunds(client) - price * shares;
                 // need to request an increase in creditLine
                 if (increase < -surplus){
-                    return new ClientBuySellResponse(client, stock, 0, price, date);
+                    return new ClientBuySellResponse(client, stock, 0, price, date, null);
 //                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
                 }
                 else {
@@ -99,7 +93,21 @@ public class ClientConsumerController {
                 }
             }
         }
-        return new ClientBuySellResponse(client, stock, shares, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        return new ClientBuySellResponse(client, stock, shares, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), null);
+    }
+
+    public CreditIncreaseResponse requestCreditLineIncrease(Client client, double creditIncrease) throws URISyntaxException {
+        URI uri = new URIBuilder()
+                .setScheme("http")
+                .setHost(creditIncreaseHost)
+                .setPort(creditIncreasePort)
+                .setPath(creditIncreasePath)
+                .build();
+        new DefaultUriBuilderFactory().builder().build();
+        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId());
+
+        CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
+        return creditIncreaseResponse;
     }
 
     @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)

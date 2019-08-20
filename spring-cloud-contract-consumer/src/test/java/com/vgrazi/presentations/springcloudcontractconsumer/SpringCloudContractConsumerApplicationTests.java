@@ -3,6 +3,8 @@ package com.vgrazi.presentations.springcloudcontractconsumer;
 import com.vgrazi.presentations.springcloudcontractconsumer.controller.ClientConsumerController;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
+import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseRequest;
+import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
@@ -20,15 +22,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // todo: this enables MockMvc to be instantiated. In our case it is not required, since we are instantiating it
-@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -45,7 +50,10 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
-        controller = new ClientConsumerController(new RestTemplate(), portfolioRepository,
+        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+
+        controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
@@ -56,7 +64,6 @@ public class SpringCloudContractConsumerApplicationTests {
 // todo: Presentation: at this point, we traditionally might stub the rest call.
 //  However that is not a scalable solution, since the endpoint might change!
 //  For this, we need contract-generated stubs.
-// when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class))).thenReturn(150_000.0);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(
@@ -92,7 +99,9 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
-        controller = new ClientConsumerController(new RestTemplate(), portfolioRepository,
+        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+        controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
@@ -133,7 +142,8 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
                                 "    \"shares\": 0\n," +
-                                "    \"date\": \"2019-08-14\"" +
+                                "    \"date\": \"" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + "\"\n," +
+                                "    \"denialReason\":\"Credit line has reached its max. Available: 900000.0\"" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
