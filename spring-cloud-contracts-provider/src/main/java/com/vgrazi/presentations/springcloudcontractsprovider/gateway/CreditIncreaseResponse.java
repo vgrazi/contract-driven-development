@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreditIncreaseResponse {
     @Getter @Setter
-    private double clientId;
+    private int clientId;
     @Getter @Setter
     private double increaseAmount;
 
@@ -18,7 +18,7 @@ public class CreditIncreaseResponse {
 
     @Getter private String date;
 
-    public CreditIncreaseResponse(double clientId, double increaseAmount, String date) {
+    public CreditIncreaseResponse(int clientId, double increaseAmount, String date) {
         this.clientId = clientId;
         this.increaseAmount = increaseAmount;
         this.date = date;
