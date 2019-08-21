@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -42,16 +42,13 @@ public class SpringCloudContractConsumerApplicationTests {
     ClientRepository clientRepository;
     @Mock
     PricingRepository pricingRepository;
-    @Mock
-    RestTemplate restTemplate;
+
+    RestTemplate restTemplate = new RestTemplate();
 
     private ClientConsumerController controller;
 
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
-        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
-                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
-
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
@@ -95,8 +92,6 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
-        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
-                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
@@ -124,7 +119,7 @@ public class SpringCloudContractConsumerApplicationTests {
                         .json("{\n" +
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 2,\n" +
-                                "        \"taxId\": \"123-45-6789\",\n" +
+                                "        \"taxId\": \"246-80-135\",\n" +
                                 "        \"creditLimit\": 100000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +

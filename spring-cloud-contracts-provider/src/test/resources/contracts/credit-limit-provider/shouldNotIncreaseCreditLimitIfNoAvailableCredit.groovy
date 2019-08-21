@@ -8,6 +8,7 @@ Contract.make {
                 "currentCreditLine": $(consumer(anyDouble()), producer(100_000)),
                 "increaseAmount": $(consumer(anyDouble()), producer(1_099_000)),
                 "clientId": 2
+                ,"taxId": "246-80-135"
         )
         headers {
             contentType applicationJson()

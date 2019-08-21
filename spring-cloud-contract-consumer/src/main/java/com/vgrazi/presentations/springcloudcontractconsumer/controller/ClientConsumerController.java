@@ -71,10 +71,8 @@ public class ClientConsumerController {
             if (surplus >= 0) {
                 portfolioRepository.placeBuyOrder(client, stock, shares);
             } else {
-                // todo: add call to provider to increase credit line
                 // request credit increase for double the shortage. Server will return with max credit increase up to the requested amount
                 double creditIncrease = -surplus;
-
                 CreditIncreaseResponse response = requestCreditLineIncrease(client, creditIncrease);
                 if(response.getDenialReason() != null) {
                     return new ClientBuySellResponse(client, stock, 0, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), response.getDenialReason());
@@ -86,7 +84,6 @@ public class ClientConsumerController {
                 // need to request an increase in creditLine
                 if (increase < -surplus){
                     return new ClientBuySellResponse(client, stock, 0, price, date, null);
-//                    throw new IllegalArgumentException("Insufficient credit - apply for increase");
                 }
                 else {
                     portfolioRepository.placeBuyOrder(client, stock, shares);
@@ -104,7 +101,7 @@ public class ClientConsumerController {
                 .setPath(creditIncreasePath)
                 .build();
         new DefaultUriBuilderFactory().builder().build();
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId());
+        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(), client.getTaxId());
 
         CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
         return creditIncreaseResponse;
