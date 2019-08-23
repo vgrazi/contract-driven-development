@@ -76,7 +76,6 @@ public class SpringCloudContractConsumerApplicationTests {
                         .json("{\n" +
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 1,\n" +
-                                "        \"taxId\": \"123-45-6789\",\n" +
                                 "        \"creditLimit\": 120000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +
@@ -119,7 +118,6 @@ public class SpringCloudContractConsumerApplicationTests {
                         .json("{\n" +
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 2,\n" +
-                                "        \"taxId\": \"246-80-135\",\n" +
                                 "        \"creditLimit\": 100000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +

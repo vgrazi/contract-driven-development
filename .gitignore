@@ -33,4 +33,4 @@ mvn*
 .mvn*
 target*
 /presentation/~$Consumer Driven Contracts with Spring Cloud Contract.pptx
-/presentation/Consumer Driven Contracts with Spring Cloud Contract.pptx
+#/presentation/Consumer Driven Contracts with Spring Cloud Contract.pptx
