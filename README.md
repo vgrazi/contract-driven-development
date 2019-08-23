@@ -39,7 +39,7 @@ Show how everything passes
 
 Switch back to the PPT and finish the explanation
 
-> suggestion: check out the master branch (contains completed code, with taxId added, tests corrected, mockito removed, and stub runner added.
+> suggestion: check out the master branch (contains completed code, with taxId added, tests corrected, mockito removed, and stub runner added.)
 Then diff with the before-taxId branch, and copy over all of the diffs  
  Now, IntelliJ Git support will show markers for all of the changes. Put the appropriate bookmarks there (using eg Ctrl-Alt-1)
  Then just do Ctrl-1, Ctrl-2 to navigate to the bookmarks, then roll back the change at that bookmark
