@@ -32,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+// Bookmark 7
+//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -43,12 +44,18 @@ public class SpringCloudContractConsumerApplicationTests {
     @Mock
     PricingRepository pricingRepository;
 
-    RestTemplate restTemplate = new RestTemplate();
+// Bookmark 8
+    @Mock
+    RestTemplate restTemplate;
 
     private ClientConsumerController controller;
 
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
+// Bookmark 9
+        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
@@ -92,6 +99,9 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
+// Bookmark 0
+        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
