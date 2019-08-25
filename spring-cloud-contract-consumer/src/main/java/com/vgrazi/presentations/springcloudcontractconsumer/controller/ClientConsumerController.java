@@ -54,42 +54,50 @@ public class ClientConsumerController {
     public ClientBuySellResponse placeBuySellOrder(@RequestBody ClientBuySellRequest request) throws URISyntaxException {
 
         int clientId = request.getClientId();
-        Stock stock = request.getStock();
-        int shares = request.getShares();
         Client client = portfolioRepository.getClient(clientId);
         if (client == null) {
             throw new IllegalArgumentException("Unknown client id " + clientId);
         }
+
+        Stock stock = request.getStock();
+        int shares = request.getShares();
         double price = pricingRepository.getPrice(stock);
         if (shares < 0) {
+            // this is a sell order
             portfolioRepository.placeSellOrder(client, stock, -shares);
         }
         // disregard 0 share purchases, just display the holdings
         else if (shares > 0) {
-            double surplus = portfolioRepository.getAvailableFunds(client) - price * shares;
-
-            if (surplus >= 0) {
+            // Determine price of the buy order
+            double purchasePrice = price * shares;
+            // Get the available funds = credit line + profits on existing positions
+            double availableFunds = portfolioRepository.getAvailableFunds(client);
+            if (availableFunds  >= purchasePrice) {
+                // Client has sufficient funds to cover the order. Place the buy order
                 portfolioRepository.placeBuyOrder(client, stock, shares);
             } else {
-                // request credit increase for double the shortage. Server will return with max credit increase up to the requested amount
-                double creditIncrease = -surplus;
-                CreditIncreaseResponse response = requestCreditLineIncrease(client, creditIncrease);
+                // Insufficient funds for the order. See if there is available credit line
+                double requestedIncrease = purchasePrice - availableFunds;
+                // request credit increase for the shortage. Server will return with max credit increase up to the requested amount
+                CreditIncreaseResponse response = requestCreditLineIncrease(client, requestedIncrease);
+                // check if we got our increase. If not, there will be a denial reason
                 if(response.getDenialReason() != null) {
+                    // return the denial reason. 0 shares were purchased
                     return new ClientBuySellResponse(client, stock, 0, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), response.getDenialReason());
                 }
-                double increase = response.getIncreaseAmount();
-                String date = response.getDate();
-                client.setCreditLimit(client.getCreditLimit() + increase);
-                surplus = portfolioRepository.getAvailableFunds(client) - price * shares;
-                // need to request an increase in creditLine
-                if (increase < -surplus){
-                    return new ClientBuySellResponse(client, stock, 0, price, date, null);
-                }
-                else {
+
+                // get the actual increase. Should be at least the requested amount
+                double actualIncrease = response.getIncreaseAmount();
+                client.setCreditLimit(client.getCreditLimit() + actualIncrease);
+                if (actualIncrease >= requestedIncrease) {
                     portfolioRepository.placeBuyOrder(client, stock, shares);
+                } else {
+                    // we didn't get enough credit increase. Notify the client
+                    return new ClientBuySellResponse(client, stock, 0, price, response.getDate(), "Insufficient credit");
                 }
             }
         }
+
         return new ClientBuySellResponse(client, stock, shares, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), null);
     }
 
