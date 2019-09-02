@@ -10,5 +10,6 @@ public class CreditIncreaseRequest {
     @Getter private double increaseAmount;
     @Getter private int clientId;
     @Getter private double currentCreditLine;
+    @Getter private long date;
     @Getter private String taxId;
 }

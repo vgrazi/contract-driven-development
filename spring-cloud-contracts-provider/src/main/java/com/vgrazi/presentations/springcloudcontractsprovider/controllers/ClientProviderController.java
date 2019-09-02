@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,12 +48,13 @@ public class ClientProviderController {
         double currentCreditLine = getCurrentCreditLine(creditIncreaseRequest);
         double increase = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
         double totalCreditLine = currentCreditLine + increase;
+        long date = creditIncreaseRequest.getDate();
         updateCreditLine(creditIncreaseRequest.getClientId(), totalCreditLine);
 
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.MIN).format(DateTimeFormatter.ISO_DATE));
         }
 
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));

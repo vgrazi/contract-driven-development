@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -109,7 +111,8 @@ public class ClientConsumerController {
                 .setPath(creditIncreasePath)
                 .build();
         new DefaultUriBuilderFactory().builder().build();
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(), client.getTaxId());
+        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(), client.getTaxId(),
+                LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
 
         CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
         return creditIncreaseResponse;

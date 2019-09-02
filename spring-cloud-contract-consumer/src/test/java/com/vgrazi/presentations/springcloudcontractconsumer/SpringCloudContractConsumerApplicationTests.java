@@ -3,8 +3,6 @@ package com.vgrazi.presentations.springcloudcontractconsumer;
 import com.vgrazi.presentations.springcloudcontractconsumer.controller.ClientConsumerController;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseRequest;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
@@ -84,6 +82,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"symbol\": \"MSFT\",\n" +
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
+                                "    \"date\": \"" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + "\"\n," +
                                 "    \"shares\": 1000\n" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
