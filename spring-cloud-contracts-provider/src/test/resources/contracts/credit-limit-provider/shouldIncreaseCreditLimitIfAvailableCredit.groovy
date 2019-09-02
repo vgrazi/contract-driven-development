@@ -7,7 +7,8 @@ Contract.make {
         body(
                 "currentCreditLine": $(consumer(anyDouble()), producer(100_000)),
                 "increaseAmount": $(consumer(anyDouble()), producer(19_000)),
-                "clientId": 1
+                "clientId": 1,
+                "date": $(producer("2019-08-14"), consumer(anyDate()))
 // Bookmark 3
         )
         headers {

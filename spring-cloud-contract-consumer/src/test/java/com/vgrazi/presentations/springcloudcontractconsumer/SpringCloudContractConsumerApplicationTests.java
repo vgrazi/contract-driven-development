@@ -11,6 +11,7 @@ import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRe
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // Bookmark 7
-//@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9081", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -45,7 +46,8 @@ public class SpringCloudContractConsumerApplicationTests {
     PricingRepository pricingRepository;
 
 // Bookmark 8
-    @Mock
+//    @Mock
+    @Autowired
     RestTemplate restTemplate;
 
     private ClientConsumerController controller;
@@ -53,12 +55,12 @@ public class SpringCloudContractConsumerApplicationTests {
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
 // Bookmark 9
-        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
-                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+//        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+//                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
 
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
-                9080, "/request-credit-increase");
+                9081, "/request-credit-increase");
 
         Client client = new Client(1, "Mary Smith", "123-45-6789", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
@@ -100,11 +102,11 @@ public class SpringCloudContractConsumerApplicationTests {
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
 // Bookmark 0
-        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
-                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+//        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+//                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
-                9080, "/request-credit-increase");
+                9081, "/request-credit-increase");
 
         Client client = new Client(2, "John Jones", "246-80-135", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);

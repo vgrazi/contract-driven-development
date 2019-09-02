@@ -46,12 +46,13 @@ public class ClientProviderController {
         double currentCreditLine = getCurrentCreditLine(creditIncreaseRequest);
         double increase = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
         double totalCreditLine = currentCreditLine + increase;
+        String date = creditIncreaseRequest.getDate();
         updateCreditLine(creditIncreaseRequest.getClientId(), totalCreditLine);
 
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), date);
         }
 
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
