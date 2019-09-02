@@ -51,7 +51,6 @@ public class SpringCloudContractsProviderApplicationTests {
                                         "\"currentCreditLine\":" + currentCreditLine + ",\n" +
                                         "\"increaseAmount\":" + increaseAmount + ",\n" +
                                         "\"clientId\":1" +
-                                        ", \n\"taxId\":\"123-45-6789\"" +
                                         "}")
         )
                 .andDo(print())

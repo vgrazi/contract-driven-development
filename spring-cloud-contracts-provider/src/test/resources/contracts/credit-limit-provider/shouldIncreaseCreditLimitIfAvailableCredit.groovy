@@ -14,7 +14,6 @@ Contract.make {
                 "increaseAmount": $(consumer(anyDouble()), producer(19_000)),
                 "clientId": 1,
                 "date": $(consumer(anyInteger()), producer(seconds))
-                ,"taxId": "123-45-6789"
         )
         headers {
             contentType applicationJson()

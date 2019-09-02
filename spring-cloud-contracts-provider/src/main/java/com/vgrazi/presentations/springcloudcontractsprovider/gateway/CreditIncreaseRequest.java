@@ -11,5 +11,4 @@ public class CreditIncreaseRequest {
     @Getter private int clientId;
     @Getter private double currentCreditLine;
     @Getter private long date;
-    @Getter private String taxId;
 }
