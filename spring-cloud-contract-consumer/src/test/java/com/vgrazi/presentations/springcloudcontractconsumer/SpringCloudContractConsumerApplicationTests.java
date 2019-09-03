@@ -107,7 +107,7 @@ public class SpringCloudContractConsumerApplicationTests {
 //                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
-                9081, "/request-credit-increase");
+                9080, "/request-credit-increase");
 
         Client client = new Client(2, "John Jones", "246-80-135", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);

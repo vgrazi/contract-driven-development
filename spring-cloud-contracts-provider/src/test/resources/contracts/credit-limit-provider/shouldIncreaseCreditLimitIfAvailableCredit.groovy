@@ -14,7 +14,7 @@ Contract.make {
                 "increaseAmount": $(consumer(anyDouble()), producer(19_000)),
                 "clientId": 1,
                 "date": $(producer("2019-08-14"), consumer(anyDate()))
-// Bookmark 3
+// Bookmark 4
         )
         headers {
             contentType applicationJson()

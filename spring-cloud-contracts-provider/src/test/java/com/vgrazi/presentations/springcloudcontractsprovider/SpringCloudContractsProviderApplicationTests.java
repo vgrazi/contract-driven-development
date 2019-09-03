@@ -12,6 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
@@ -50,7 +53,10 @@ public class SpringCloudContractsProviderApplicationTests {
                                 "{" +
                                         "\"currentCreditLine\":" + currentCreditLine + ",\n" +
                                         "\"increaseAmount\":" + increaseAmount + ",\n" +
-                                        "\"clientId\":1" +
+                                        "\"clientId\":1," +
+                                        "\"date\":\"" +
+                                        LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
+                                        "\"" +
 // Bookmark 2
                                         "}")
         )

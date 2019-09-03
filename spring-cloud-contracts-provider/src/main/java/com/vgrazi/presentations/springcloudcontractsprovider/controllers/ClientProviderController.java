@@ -46,6 +46,7 @@ public class ClientProviderController {
         double currentCreditLine = getCurrentCreditLine(creditIncreaseRequest);
         double increase = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
         double totalCreditLine = currentCreditLine + increase;
+// Bookmark 3
         String date = creditIncreaseRequest.getDate();
         updateCreditLine(creditIncreaseRequest.getClientId(), totalCreditLine);
 
