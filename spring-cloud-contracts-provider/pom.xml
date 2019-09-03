@@ -74,15 +74,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
 <extensions>true</extensions>
             </plugin>
-            <plugin>
-<!--  this is to generate tests and stubs -->
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <baseClassForTests>com.vgrazi.presentations.springcloudcontractsprovider.BaseTestClass</baseClassForTests>
-                </configuration>
-            </plugin>
 
         </plugins>
     </build>
