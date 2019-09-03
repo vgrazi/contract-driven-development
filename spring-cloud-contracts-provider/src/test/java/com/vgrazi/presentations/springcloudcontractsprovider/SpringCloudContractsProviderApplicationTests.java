@@ -55,9 +55,9 @@ public class SpringCloudContractsProviderApplicationTests {
                                         "\"increaseAmount\":" + increaseAmount + ",\n" +
                                         "\"clientId\":1," +
                                         "\"date\":\"" +
+// Bookmark 2
                                         LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
                                         "\"" +
-// Bookmark 2
                                         "}")
         )
                 .andDo(print())

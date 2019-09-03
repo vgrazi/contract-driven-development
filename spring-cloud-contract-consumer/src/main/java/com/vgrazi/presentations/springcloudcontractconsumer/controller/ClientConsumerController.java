@@ -110,7 +110,8 @@ public class ClientConsumerController {
                 .build();
         new DefaultUriBuilderFactory().builder().build();
 // Bookmark 6
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(), LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(),
+                LocalDate.now().format(DateTimeFormatter.ISO_DATE));
 
         CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
         return creditIncreaseResponse;
