@@ -3,8 +3,6 @@ package com.vgrazi.presentations.springcloudcontractconsumer;
 import com.vgrazi.presentations.springcloudcontractconsumer.controller.ClientConsumerController;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseRequest;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
@@ -23,12 +21,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
@@ -77,6 +77,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"symbol\": \"MSFT\",\n" +
                                 "    \"exchange\": \"NASD\"\n" +
                                 "  },\n" +
+                                "  \"date\":" + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN) + "\n," +
                                 "  \"shares\": \"1000\"\n" +
                                 "}"))
                 .andDo(print())
@@ -123,6 +124,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"symbol\": \"MSFT\",\n" +
                                 "    \"exchange\": \"NASD\"\n" +
                                 "  },\n" +
+                                "  \"date\":" + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN) + "\n," +
                                 "  \"shares\": \"10000\"\n" +
                                 "}"))
                 .andDo(print())
@@ -131,7 +133,6 @@ public class SpringCloudContractConsumerApplicationTests {
                         .json("{\n" +
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 2,\n" +
-                                "        \"taxId\": \"246-80-135\",\n" +
                                 "        \"creditLimit\": 100000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +
