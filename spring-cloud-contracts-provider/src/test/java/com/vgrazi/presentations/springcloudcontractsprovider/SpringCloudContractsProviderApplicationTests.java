@@ -50,7 +50,10 @@ public class SpringCloudContractsProviderApplicationTests {
                                 "{" +
                                         "\"currentCreditLine\":" + currentCreditLine + ",\n" +
                                         "\"increaseAmount\":" + increaseAmount + ",\n" +
-                                        "\"clientId\":1" +
+                                        "\"clientId\":1," +
+                                        "\"date\":\"" +
+                                        LocalDateTime.now().toEpochSecond(ZoneOffset.MIN) +
+                                        "\"" +
                                         "}")
         )
                 .andDo(print())
