@@ -54,7 +54,8 @@ public class ClientProviderController {
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine), LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.MIN).format(DateTimeFormatter.ISO_DATE));
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine),
+                    LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.MIN).format(DateTimeFormatter.ISO_DATE));
         }
 
         return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));

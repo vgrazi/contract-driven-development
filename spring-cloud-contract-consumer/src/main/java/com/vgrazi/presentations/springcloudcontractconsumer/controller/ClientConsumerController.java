@@ -111,7 +111,8 @@ public class ClientConsumerController {
                 .setPath(creditIncreasePath)
                 .build();
         new DefaultUriBuilderFactory().builder().build();
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(), LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
+        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(),
+                LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
 
         CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
         return creditIncreaseResponse;
