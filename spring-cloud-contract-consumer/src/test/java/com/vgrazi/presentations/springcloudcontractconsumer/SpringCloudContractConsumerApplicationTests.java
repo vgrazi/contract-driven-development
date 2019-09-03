@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // Bookmark 7
-@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9081", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
@@ -60,7 +60,7 @@ public class SpringCloudContractConsumerApplicationTests {
 
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
-                9081, "/request-credit-increase");
+                9080, "/request-credit-increase");
 
         Client client = new Client(1, "Mary Smith", "123-45-6789", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
