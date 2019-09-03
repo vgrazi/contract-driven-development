@@ -97,6 +97,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"symbol\": \"MSFT\",\n" +
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
+                                "    \"date\": \"" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + "\"\n," +
                                 "    \"shares\": 1000\n" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
@@ -111,7 +112,7 @@ public class SpringCloudContractConsumerApplicationTests {
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
 
-        Client client = new Client(2, "John Jones", "246-80-135", 100_000, 1000);
+        Client client = new Client(2, "John Jones", "246-80-1357", 100_000, 1000);
         when(portfolioRepository.getClient(anyInt())).thenReturn(client);
         when(portfolioRepository.getAvailableFunds(any(Client.class))).thenCallRealMethod();
         when(pricingRepository.getPrice(any(Stock.class))).thenReturn(120.0);
@@ -135,6 +136,7 @@ public class SpringCloudContractConsumerApplicationTests {
                         .json("{\n" +
                                 "    \"client\": {\n" +
                                 "        \"clientId\": 2,\n" +
+                                "        \"taxId\": \"246-80-1357\",\n" +
                                 "        \"creditLimit\": 100000,\n" +
                                 "        \"cashOnDeposit\": 1000,\n" +
                                 "        \"positions\": []\n" +
