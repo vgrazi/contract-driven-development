@@ -22,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -66,6 +68,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"symbol\": \"MSFT\",\n" +
                                 "    \"exchange\": \"NASD\"\n" +
                                 "  },\n" +
+                                "  \"date\":" + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN) + "\n," +
                                 "  \"shares\": \"1000\"\n" +
                                 "}"))
                 .andDo(print())
@@ -109,6 +112,7 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "    \"symbol\": \"MSFT\",\n" +
                                 "    \"exchange\": \"NASD\"\n" +
                                 "  },\n" +
+                                "  \"date\":" + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN) + "\n," +
                                 "  \"shares\": \"10000\"\n" +
                                 "}"))
                 .andDo(print())

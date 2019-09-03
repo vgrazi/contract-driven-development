@@ -17,5 +17,4 @@ public class SpringCloudContractConsumerApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringCloudContractConsumerApplication.class, args);
     }
-
 }
