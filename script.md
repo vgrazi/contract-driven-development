@@ -15,38 +15,36 @@ Show the PPT slide 1, talk about how we all swallowed the Kool-aid on microservi
 Slide 2 Challenges of Microservices
 Slide 3-6 Wiremock... but who is responsible for changes
 
-Somewhere after slide 2 and before slide 7, kick off the producer and consumer, and show in Postman the buy-sell and request-credit-line endpoints.
+After slide 6, kick off the producer and consumer, and show in Postman the buy-sell and request-credit-line endpoints.
 
-Now switch to code.. show the structure of the project, how we have the consumer and producer modules, that represent different projects.
+1. Talk about app
+2. Demo in Postman
+3. Explain 2 modules - consumer and producer
+4. Show consumer controller, rest template
+5. Show consumer test class
+6. Run consumer test class
+7. Change provider request - BM1
+8. Change provider test - BM2
+9. Change provider CreditIncreaseResponse BM3
+10. Change provider controller BM4 - 2 places
+11. Run provider test - should pass!----- Back to slides
+12. Run consumer test - passes, even though provider changed - BM5
+13. Change mocks, delete mocked calls, add stub runner(But don't correct the call in the client tester)
+14. Add Spring Cloud Contract verifier to provider pom - BM6
+15. Show client pom stub runner
+16. Show contracts directory structure
+17. Fix contracts - BM7
+18. Provider - mvn clean install -DskipTests to generate stubs
+19. Show stub mappings
+20. Run consumer tests - now they fail 
+21. Fix consumer controller and request/response classes - BM8
+22. fix consumer test - BM5
+23. provider mvn clean install
+24. show generated test source
+25. Discuss BaseTestClass - BM9
 
-Bookmark 1 is the provider request, where we need to change the date format to long
-Bookmark 2 is the corresponding provider test
 
-Change bookmark 1 and 2 provider to use longs instead of date strings, and show how the provider tests pass
-
-Then show how the consumer tests pass, even though they shouldn't, since their mockito endpoints are still mocked
-
-Next add the spring contract dependencies to the provider pom, and introduce the groovy contracts, and show how to fix those (Bookmark 2 and 4). Discuss how those must be under the test/resources/contracts dir. 
-
-Talk about how the client request is regex to match a range of request calls, and the client responses is hard coded to return a fixed response to the caller. The server is opposite - request is hard coded for test input, and response is regex for matching  
-
-Generate the provider stubs using
-mvn clean install -DskipTests
-
-Now change the consumer tests to use a real rest template, and show how the tests fail because of connection rejected
-
-Add the stub runner annotation, show how the consumer tests now fail, beause the endpoint changed. Now we're cooking!
-
-Now change the consumer implementation to pass in the taxId
-
-Run mvn clean install on the provider
-Run mvn clean install on the consumer
-
-Show how everything passes
-
-Display the generated provider side test RestAssured code.
-
-Switch back to the PPT and finish the explanation of CDC as a colaborative TDD process
+Switch back to the PPT and finish the explanation of CDC as a collaborative TDD process
 
 > suggestion: check out the master branch (contains completed code, with dates as longs, tests corrected, mockito removed, and stub runner added.)
 Then diff with the date-string branch, and copy in all of the diffs (but don't commit that to git!!)
@@ -56,7 +54,29 @@ Then diff with the date-string branch, and copy in all of the diffs (but don't c
  
  Ctrl-1 and 2 are for the provider code and provider test, 3 is for the provider controller, and 4 is for the contracts on the provider side, and the rest are on the consumer
  
+> Tip - Once you copy in all of the changes from date-string branch, shelve the changes in IntelliJ, so that you can easily re-apply them
 
 
+Calls:
 
+localhost:8091/buy-sell
+```json
+{
+	"clientId":1,
+	"stock":{
+		"symbol":"IBM",
+		"exchange":"NYSE"
+	},
+	"shares":1000
+}
+```
 
+localhost:8081/request-credit-increase
+```json
+{
+	"clientId":1,
+	"increaseAmount":10000,
+	"currentCreditLine":10000,
+	"date":"2019-09-04"
+}
+```
