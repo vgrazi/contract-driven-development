@@ -24,8 +24,7 @@ Contract.make {
         body(
             "clientId": fromRequest().body('$.clientId'),
             "increaseAmount": 0,
-            "denialReason": "Credit line has reached its max. Available: 900000.0",
-            "date": $(producer(anyDate()), consumer("2019-08-14"))
+            "denialReason": "Credit line has reached its max. Available: 900000.0"
         )
         headers {
             contentType applicationJson()
