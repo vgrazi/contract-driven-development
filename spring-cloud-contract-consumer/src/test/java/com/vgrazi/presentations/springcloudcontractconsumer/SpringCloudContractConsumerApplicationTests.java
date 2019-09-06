@@ -3,6 +3,8 @@ package com.vgrazi.presentations.springcloudcontractconsumer;
 import com.vgrazi.presentations.springcloudcontractconsumer.controller.ClientConsumerController;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
+import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseRequest;
+import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
@@ -26,8 +28,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
@@ -49,6 +52,9 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
+//        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+//                .thenReturn(new CreditIncreaseResponse(1, 20_000,null , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+//
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
@@ -86,7 +92,6 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"symbol\": \"MSFT\",\n" +
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
-                                "    \"date\": \"" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + "\"\n," +
                                 "    \"shares\": 1000\n" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
@@ -94,6 +99,8 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
+//        when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
+//                .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0" , LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
                 clientRepository, pricingRepository, "localhost",
                 9080, "/request-credit-increase");
@@ -132,7 +139,6 @@ public class SpringCloudContractConsumerApplicationTests {
                                 "        \"exchange\": \"NASD\"\n" +
                                 "    },\n" +
                                 "    \"shares\": 0\n," +
-                                "    \"date\": \"" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + "\"\n," +
                                 "    \"denialReason\":\"Credit line has reached its max. Available: 900000.0\"" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
