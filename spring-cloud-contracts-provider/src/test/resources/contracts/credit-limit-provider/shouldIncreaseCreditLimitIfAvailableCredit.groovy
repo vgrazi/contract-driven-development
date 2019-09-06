@@ -24,8 +24,7 @@ Contract.make {
         body(
                 "clientId": fromRequest().body('$.clientId'),
                 "increaseAmount": 20000,
-                "denialReason": null,
-                "date": $(producer(anyDate()), consumer("2019-08-14"))
+                "denialReason": null
         )
         headers {
             contentType applicationJson()
