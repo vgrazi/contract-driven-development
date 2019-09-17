@@ -92,8 +92,7 @@ public class ClientConsumerController {
                 CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), requestedIncrease, client.getClientId(),
                         LocalDate.now().format(DateTimeFormatter.ISO_DATE));
 
-                CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
-                CreditIncreaseResponse response = creditIncreaseResponse;
+                CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
 // Bookmark 8
                 // check if we got our increase. If not, there will be a denial reason
                 if(response.getDenialReason() != null) {
