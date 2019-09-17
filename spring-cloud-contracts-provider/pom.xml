@@ -74,6 +74,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
 <extensions>true</extensions>
             </plugin>
+<!--Bookmark 6 -->
+
 
         </plugins>
     </build>

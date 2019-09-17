@@ -78,9 +78,22 @@ public class ClientConsumerController {
             } else {
                 // Insufficient funds for the order. See if there is available credit line
                 double requestedIncrease = purchasePrice - availableFunds;
+
+                // This is the consumer controller, about to make a request to the provider, for a credit line increase
 // Bookmark 1
                 // request credit increase for the shortage. Server will return with max credit increase up to the requested amount
-                CreditIncreaseResponse response = requestCreditLineIncrease(client, requestedIncrease);
+                URI uri = new URIBuilder()
+                        .setScheme("http")
+                        .setHost(creditIncreaseHost)
+                        .setPort(creditIncreasePort)
+                        .setPath(creditIncreasePath)
+                        .build();
+                new DefaultUriBuilderFactory().builder().build();
+                CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), requestedIncrease, client.getClientId(),
+                        LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+
+                CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
+                CreditIncreaseResponse response = creditIncreaseResponse;
 // Bookmark 8
                 // check if we got our increase. If not, there will be a denial reason
                 if(response.getDenialReason() != null) {
@@ -101,21 +114,6 @@ public class ClientConsumerController {
         }
 
         return new ClientBuySellResponse(client, stock, shares, price, null);
-    }
-
-    public CreditIncreaseResponse requestCreditLineIncrease(Client client, double creditIncrease) throws URISyntaxException {
-        URI uri = new URIBuilder()
-                .setScheme("http")
-                .setHost(creditIncreaseHost)
-                .setPort(creditIncreasePort)
-                .setPath(creditIncreasePath)
-                .build();
-        new DefaultUriBuilderFactory().builder().build();
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(),
-                LocalDate.now().format(DateTimeFormatter.ISO_DATE));
-
-        CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
-        return creditIncreaseResponse;
     }
 
     @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)
