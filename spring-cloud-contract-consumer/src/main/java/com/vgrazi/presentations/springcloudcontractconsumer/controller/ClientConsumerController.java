@@ -83,13 +83,13 @@ public class ClientConsumerController {
                 // request credit increase for the shortage. Server will return with max credit increase up to the requested amount
                 CreditIncreaseResponse response = requestCreditLineIncrease(client, requestedIncrease);
                 // check if we got our increase. If not, there will be a denial reason
-                if(response.getDenialReason() != null) {
+                if(creditIncreaseResponse.getDenialReason() != null) {
                     // return the denial reason. 0 shares were purchased
-                    return new ClientBuySellResponse(client, stock, 0, price, response.getDenialReason());
+                    return new ClientBuySellResponse(client, stock, 0, price, creditIncreaseResponse.getDenialReason());
                 }
 
                 // get the actual increase. Should be at least the requested amount
-                double actualIncrease = response.getIncreaseAmount();
+                double actualIncrease = creditIncreaseResponse.getIncreaseAmount();
                 client.setCreditLimit(client.getCreditLimit() + actualIncrease);
                 if (actualIncrease >= requestedIncrease) {
                     portfolioRepository.placeBuyOrder(client, stock, shares);
@@ -101,21 +101,6 @@ public class ClientConsumerController {
         }
 
         return new ClientBuySellResponse(client, stock, shares, price, null);
-    }
-
-    public CreditIncreaseResponse requestCreditLineIncrease(Client client, double creditIncrease) throws URISyntaxException {
-        URI uri = new URIBuilder()
-                .setScheme("http")
-                .setHost(creditIncreaseHost)
-                .setPort(creditIncreasePort)
-                .setPath(creditIncreasePath)
-                .build();
-        new DefaultUriBuilderFactory().builder().build();
-        CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(),
-                LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
-
-        CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
-        return creditIncreaseResponse;
     }
 
     @PostMapping(value = "/ping", consumes = APPLICATION_JSON_VALUE)
