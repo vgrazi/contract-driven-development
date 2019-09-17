@@ -94,15 +94,15 @@ public class ClientConsumerController {
                 CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), requestedIncrease, client.getClientId(),
                         LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
 
-                CreditIncreaseResponse creditIncreaseResponse = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
+                CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
                 // check if we got our increase. If not, there will be a denial reason
-                if(creditIncreaseResponse.getDenialReason() != null) {
+                if(response.getDenialReason() != null) {
                     // return the denial reason. 0 shares were purchased
-                    return new ClientBuySellResponse(client, stock, 0, price, creditIncreaseResponse.getDenialReason());
+                    return new ClientBuySellResponse(client, stock, 0, price, response.getDenialReason());
                 }
 
                 // get the actual increase. Should be at least the requested amount
-                double actualIncrease = creditIncreaseResponse.getIncreaseAmount();
+                double actualIncrease = response.getIncreaseAmount();
                 client.setCreditLimit(client.getCreditLimit() + actualIncrease);
                 if (actualIncrease >= requestedIncrease) {
                     portfolioRepository.placeBuyOrder(client, stock, shares);
