@@ -1,16 +1,18 @@
 package com.vgrazi.presentations.springcloudcontractsprovider.gateway;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class CreditIncreaseRequest {
-    @Getter private double increaseAmount;
-    @Getter private int clientId;
-    @Getter private double currentCreditLine;
-    @Getter private String date;
+    private double increaseAmount;
+    private int clientId;
+    private double currentCreditLine;
+    private String date;
 
 // Bookmark 1
 }
