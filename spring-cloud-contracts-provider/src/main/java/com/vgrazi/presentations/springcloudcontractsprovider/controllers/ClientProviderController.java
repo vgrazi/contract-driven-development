@@ -56,7 +56,7 @@ public class ClientProviderController {
             return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine));
         }
 
-        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase);
     }
 
     public void updateCreditLine(int clientId, double totalCreditLine) {
