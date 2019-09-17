@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -49,16 +48,16 @@ public class ClientProviderController {
         double increase = Utils.round(creditIncreaseRequest.getIncreaseAmount(), rounding);
         double totalCreditLine = currentCreditLine + increase;
         long date = creditIncreaseRequest.getDate();
+        System.out.println("Request date:" + date);
         updateCreditLine(creditIncreaseRequest.getClientId(), totalCreditLine);
 
 
         if (totalCreditLine > maxCreditline) {
             // request is for more than the max. Bring them to the max
-            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine),
-                    LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.MIN).format(DateTimeFormatter.ISO_DATE));
+            return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), 0, "Credit line has reached its max. Available: " + (maxCreditline - currentCreditLine));
         }
 
-        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        return new CreditIncreaseResponse(creditIncreaseRequest.getClientId(), increase);
     }
 
     public void updateCreditLine(int clientId, double totalCreditLine) {

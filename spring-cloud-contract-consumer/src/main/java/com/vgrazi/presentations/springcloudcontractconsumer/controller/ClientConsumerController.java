@@ -85,7 +85,7 @@ public class ClientConsumerController {
                 // check if we got our increase. If not, there will be a denial reason
                 if(response.getDenialReason() != null) {
                     // return the denial reason. 0 shares were purchased
-                    return new ClientBuySellResponse(client, stock, 0, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), response.getDenialReason());
+                    return new ClientBuySellResponse(client, stock, 0, price, response.getDenialReason());
                 }
 
                 // get the actual increase. Should be at least the requested amount
@@ -95,12 +95,12 @@ public class ClientConsumerController {
                     portfolioRepository.placeBuyOrder(client, stock, shares);
                 } else {
                     // we didn't get enough credit increase. Notify the client
-                    return new ClientBuySellResponse(client, stock, 0, price, response.getDate(), "Insufficient credit");
+                    return new ClientBuySellResponse(client, stock, 0, price, "Insufficient credit");
                 }
             }
         }
 
-        return new ClientBuySellResponse(client, stock, shares, price, LocalDate.now().format(DateTimeFormatter.ISO_DATE), null);
+        return new ClientBuySellResponse(client, stock, shares, price, null);
     }
 
     public CreditIncreaseResponse requestCreditLineIncrease(Client client, double creditIncrease) throws URISyntaxException {
