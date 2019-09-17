@@ -78,8 +78,10 @@ public class ClientConsumerController {
             } else {
                 // Insufficient funds for the order. See if there is available credit line
                 double requestedIncrease = purchasePrice - availableFunds;
+// Bookmark 1
                 // request credit increase for the shortage. Server will return with max credit increase up to the requested amount
                 CreditIncreaseResponse response = requestCreditLineIncrease(client, requestedIncrease);
+// Bookmark 8
                 // check if we got our increase. If not, there will be a denial reason
                 if(response.getDenialReason() != null) {
                     // return the denial reason. 0 shares were purchased
@@ -109,7 +111,6 @@ public class ClientConsumerController {
                 .setPath(creditIncreasePath)
                 .build();
         new DefaultUriBuilderFactory().builder().build();
-// Bookmark 6
         CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), creditIncrease, client.getClientId(),
                 LocalDate.now().format(DateTimeFormatter.ISO_DATE));
 

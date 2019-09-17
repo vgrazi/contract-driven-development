@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// Bookmark 7
+// Bookmark 8
 @AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
@@ -47,7 +47,6 @@ public class SpringCloudContractConsumerApplicationTests {
     @Mock
     PricingRepository pricingRepository;
 
-// Bookmark 8
     @Mock
     RestTemplate restTemplate;
 
@@ -55,7 +54,6 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldIncreaseCreditLineWhenAvailableCredit() throws Exception {
-// Bookmark 9
         when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
                 .thenReturn(new CreditIncreaseResponse(1, 20_000,null));
 
@@ -103,7 +101,7 @@ public class SpringCloudContractConsumerApplicationTests {
 
     @Test
     public void shouldDenyWhenNoAvailableCredit() throws Exception {
-// Bookmark 0
+// Bookmark 9
         when(restTemplate.postForObject(any(URI.class), any(CreditIncreaseRequest.class), any(Class.class)))
                 .thenReturn(new CreditIncreaseResponse(2, 0,"Credit line has reached its max. Available: 900000.0"));
         controller = new ClientConsumerController(restTemplate, portfolioRepository,
