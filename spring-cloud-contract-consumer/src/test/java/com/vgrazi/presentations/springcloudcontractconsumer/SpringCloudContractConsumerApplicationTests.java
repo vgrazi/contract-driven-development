@@ -3,8 +3,6 @@ package com.vgrazi.presentations.springcloudcontractconsumer;
 import com.vgrazi.presentations.springcloudcontractconsumer.controller.ClientConsumerController;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Client;
 import com.vgrazi.presentations.springcloudcontractconsumer.domain.Stock;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseRequest;
-import com.vgrazi.presentations.springcloudcontractconsumer.gateway.CreditIncreaseResponse;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.ClientRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PortfolioRepository;
 import com.vgrazi.presentations.springcloudcontractconsumer.repository.PricingRepository;
@@ -22,11 +20,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -35,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureStubRunner(ids="com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids = "com.vgrazi.presentations:spring-cloud-contracts-provider:+:stubs:9080", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class SpringCloudContractConsumerApplicationTests {
 
     private MockMvc mockMvc;
