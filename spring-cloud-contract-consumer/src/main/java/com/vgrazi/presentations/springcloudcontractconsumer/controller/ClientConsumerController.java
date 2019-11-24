@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -82,7 +80,6 @@ public class ClientConsumerController {
                 double requestedIncrease = purchasePrice - availableFunds;
 
                 // This is the consumer controller, about to make a request to the provider, for a credit line increase
-
                 // request credit increase for the shortage. Server will return with max credit increase up to the requested amount
                 URI uri = new URIBuilder()
                         .setScheme("http")
@@ -92,7 +89,7 @@ public class ClientConsumerController {
                         .build();
                 new DefaultUriBuilderFactory().builder().build();
                 CreditIncreaseRequest creditIncreaseRequest = new CreditIncreaseRequest(client.getCreditLimit(), requestedIncrease, client.getClientId(),
-                        LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
+                        LocalDate.now().format(DateTimeFormatter.ISO_DATE));
 
                 CreditIncreaseResponse response = restTemplate.postForObject(uri, creditIncreaseRequest, CreditIncreaseResponse.class);
                 // check if we got our increase. If not, there will be a denial reason
