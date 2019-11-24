@@ -1,8 +1,30 @@
-"# contract-driven-development"
-The goal is to change the provider contract, which originally accepts a date String in the form 2019-08-29, to the new state which accepts an date as seconds since epoch 
+# contract-driven-development
+The goal is to change the provider contract, which originally accepts a date String in the form 2019-08-29, to the new state which accepts a date as seconds since epoch 
+
+## We will change the request date from string to long
+### Summary
+01. Show tests pass
+ok, so now consumer talks to provider, says we want to start giving long dates instead of String
+Provider says, no problem, we'll take care of it before you know it!
+02. Modify Consumer request and controller to use Long instead of String
+03. Consumer tests unexpectedly still pass, because we are stubbing
+Now all of the consumer tests still pass, let's look at the tests and see why
+Ok, so now it's time to do some soul searching, and introduce contracts!
+04. Introduce Maven dependencies in both providers and consumer and add stub runner to Consumer test
+05. Display contracts
+06. Generate provider side stubs mvn clean install -DskipTests
+07. (Display the stubs)
+08. Consumer tests now fail - show stub runner output
+09. Correct contracts; generate provider side stubs
+10. Consumer tests should now pass
+11. Provider tests should now fail
+12. Fix provider impl, including removing date conversion in controller
+13. Provider tests should now pass
+
 
 There are two main branches...
-master and date-string
+master and date-string.
+
 date-string is the starting state, with endpoints mocked with Mockito, no contracts, and dates as strings
 master is the target state with dates as longs, and using contracts 
 
@@ -80,3 +102,5 @@ localhost:8081/request-credit-increase
 	"date":"2019-09-04"
 }
 ```
+
+
