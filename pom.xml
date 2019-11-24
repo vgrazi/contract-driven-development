@@ -6,7 +6,6 @@
     <modules>
         <module>spring-cloud-contract-consumer</module>
         <module>spring-cloud-contracts-provider</module>
-        <module>spring-cloud-contract-contract-repo</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
