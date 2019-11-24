@@ -13,6 +13,4 @@ public class CreditIncreaseRequest {
     private int clientId;
     private double currentCreditLine;
     private String date;
-
-// Bookmark 2
 }
